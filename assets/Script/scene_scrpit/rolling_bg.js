@@ -24,8 +24,6 @@ cc.Class({
         var mov = cc.repeatForever(cc.moveBy(1,cc.Vec2(-this.rolling_speed,0)));
         this.background_pic_1.node.runAction(mov);
         this.background_pic_2.node.runAction(mov.clone());
-        
-        this.counter = 2;
     },
     update:function(dt)
     {
@@ -36,8 +34,9 @@ cc.Class({
        }
        if(Math.abs(this.background_pic_1.node.x +this.background_pic_1.node.width  + view_size.width/2) < dt*this.rolling_speed)
        {
-           this.background_pic_1.getComponent(cc.Sprite).spriteFrame = this.background_textures[this.counter];
-           this.counter = (this.counter+1)%8;
+           var texture_index = Math.floor((Math.random()*8));
+           cc.log(texture_index);
+           this.background_pic_1.getComponent(cc.Sprite).spriteFrame = this.background_textures[texture_index];
        }
        if(Math.abs(this.background_pic_2.node.x+this.background_pic_2.node.width - view_size.width/2) <dt*this.rolling_speed)
         {
@@ -45,8 +44,8 @@ cc.Class({
         }
        if(Math.abs(this.background_pic_2.node.x+this.background_pic_2.node.width + view_size.width/2) < dt*this.rolling_speed)
        {
-           this.background_pic_2.getComponent(cc.Sprite).spriteFrame = this.background_textures[this.counter];
-           this.counter = (this.counter+1)%8;
+           var texture_index = Math.floor((Math.random()*8));
+           this.background_pic_2.getComponent(cc.Sprite).spriteFrame = this.background_textures[texture_index];
        }
     }
     // update (dt) {},
