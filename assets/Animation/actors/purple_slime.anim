@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "purple_slime",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0166666666666666,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "28626e1e-a441-4d71-87ed-592b2625d20e"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "e4d6a3dd-0194-43dc-9b2c-8aa48b0d2d0c"
+            }
+          },
+          {
+            "frame": 1,
+            "value": {
+              "__uuid__": "28626e1e-a441-4d71-87ed-592b2625d20e"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

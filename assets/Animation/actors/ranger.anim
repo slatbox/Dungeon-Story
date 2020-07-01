@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "ranger",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0333333333333334,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "b65e4a46-8303-4e0d-9623-4eb2266b0515"
+            }
+          },
+          {
+            "frame": 0.48333333333333334,
+            "value": {
+              "__uuid__": "cd8aed35-b44b-47ff-8707-c2d709967f3f"
+            }
+          },
+          {
+            "frame": 1.0166666666666666,
+            "value": {
+              "__uuid__": "b65e4a46-8303-4e0d-9623-4eb2266b0515"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

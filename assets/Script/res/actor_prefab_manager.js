@@ -5,34 +5,19 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-cc.Class({
+const ActorPrefabManager = cc.Class({
     extends: cc.Component,
 
     properties: {
-        rolling_gbs:{
-            default:[],
-            type:[cc.SpriteFrame]
-        },
-        roll_speed :0,
-        start_point: cc.Vec2
+        fighter:cc.Prefab,
+        robber:cc.Prefab,
+        ranger:cc.Prefab,
+        red_demon:cc.Prefab,
+        black_bat:cc.Prefab,
+        red_bat:cc.Prefab,
+        green_slime:cc.Prefab,
+        purple_slime:cc.Prefab
+
     },
-    
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
-
-    onLoad: function () {
-      },
-
-    start:function() {
-        
-    },
-    
-    update:function(dt)
-    {
-        
-    },
-    // update (dt) {},
 });
+module.exports = ActorPrefabManager;

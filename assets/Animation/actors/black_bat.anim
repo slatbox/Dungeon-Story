@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "black_bat",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0166666666666666,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "5f6e6cdc-6771-42b9-aa37-05f297f6e8ee"
+            }
+          },
+          {
+            "frame": 0.48333333333333334,
+            "value": {
+              "__uuid__": "5abdd363-f19d-472f-bb86-0efbb3e40213"
+            }
+          },
+          {
+            "frame": 1,
+            "value": {
+              "__uuid__": "5f6e6cdc-6771-42b9-aa37-05f297f6e8ee"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

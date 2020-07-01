@@ -24,7 +24,7 @@ cc.Class({
         var seq = cc.sequence(mov_up,mov_down);
         var repeat = cc.repeatForever(seq);
         this.node.runAction(repeat);
-    }
-
+        this.node.runAction(cc.fadeIn(1));
+    },
     // update (dt) {},
 });
