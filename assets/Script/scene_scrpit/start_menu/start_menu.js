@@ -6,7 +6,6 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 const ActorPrefabManager = require("actor_prefab_manager");
 
-
 cc.Class({
     extends: cc.Component,
 
@@ -22,12 +21,15 @@ cc.Class({
             default:null,
             type: ActorPrefabManager
         },
-        
-        
+        hero_stage:{
+            default:null,
+            type:cc.Node
+        }
     },
 
     start_background:function()
     {
+        //启动背景元素
         var title = this.node.getChildByName("title");
         var note = this.node.getChildByName("note");
         title.active = true;
@@ -46,6 +48,18 @@ cc.Class({
         this.background_pic_2.node.runAction(fade_in.clone());
 
         cc.audioEngine.playMusic(this.background_music,true);
+        //设置触摸监听：
+        this.node.on(cc.Node.EventType.TOUCH_END,function(event)
+        {
+            var note = this.node.getChildByName("note");
+            var action = cc.sequence(
+                cc.fadeOut(1),
+                cc.destroySelf()
+            );
+            note.runAction(action);
+            this.node.getChildByName("select_game").active = true;
+
+        },this);
     },
     start_show_actors:function()
     {
@@ -126,6 +140,10 @@ cc.Class({
            this.background_pic_2.getComponent(cc.Sprite).spriteFrame = this.background_textures[texture_index];
        }
     },
+    select_hero:function()
+    {
+        this.hero_stage.active = true;
+    },
     start :function()
     {
         this.start_show_actors();
@@ -147,5 +165,5 @@ cc.Class({
             next_creatrure.runAction(mov);
         }
     }
-    // update (dt) {},
+    
 });

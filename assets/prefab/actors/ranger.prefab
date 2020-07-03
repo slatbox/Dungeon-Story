@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ranger1",
+    "_name": "ranger",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -149,7 +149,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "2f4719bd-8574-4c50-8f1b-cc6a0bd16910"
     },
     "fileId": "40K8LcnYRE5K5M3EJpKKVG",
     "sync": false
