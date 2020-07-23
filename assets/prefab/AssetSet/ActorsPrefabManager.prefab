@@ -1,0 +1,121 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "",
+    "_objFlags": 0,
+    "_native": "",
+    "data": {
+      "__id__": 1
+    },
+    "optimizationPolicy": 0,
+    "asyncLoadAssets": false,
+    "readonly": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "ActorsPrefabManager",
+    "_objFlags": 0,
+    "_parent": null,
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 2
+      }
+    ],
+    "_prefab": {
+      "__id__": 3
+    },
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        480,
+        320,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "77f14hY2FVJMacplcHHN9+r",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "fighter": {
+      "__uuid__": "73ae2ad3-1f94-423a-98fe-62e268e6957d"
+    },
+    "robber": {
+      "__uuid__": "b872a6c1-2a3c-49cf-8927-fb07c455665a"
+    },
+    "ranger": {
+      "__uuid__": "f56e9a1f-f6be-4a52-9e50-f130bda16f0d"
+    },
+    "red_demon": {
+      "__uuid__": "a94f5ea9-7070-4e67-8776-cc72c1e4f08f"
+    },
+    "black_bat": {
+      "__uuid__": "4c67a5a8-d0f2-430f-b870-ce2f4c91f7b5"
+    },
+    "red_bat": {
+      "__uuid__": "e48caf90-b88a-4b40-b0e8-058357356142"
+    },
+    "green_slime": {
+      "__uuid__": "22bd481c-8aef-4da1-9f41-a3724fb2825b"
+    },
+    "purple_slime": {
+      "__uuid__": "18ab3450-f7e6-49e4-9128-575177506f14"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "309a860d-1631-456a-8130-ab67bfd21747"
+    },
+    "fileId": "4eyGd9CBtHNYuXWUNsUoEw",
+    "sync": false
+  }
+]

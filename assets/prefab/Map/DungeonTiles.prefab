@@ -1,0 +1,187 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "",
+    "_objFlags": 0,
+    "_native": "",
+    "data": {
+      "__id__": 1
+    },
+    "optimizationPolicy": 0,
+    "asyncLoadAssets": false,
+    "readonly": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "DungeonTiles",
+    "_objFlags": 0,
+    "_parent": null,
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 2
+      }
+    ],
+    "_prefab": {
+      "__id__": 3
+    },
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "c362e6CwslB46EnyICmVE+6",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "single": {
+      "__uuid__": "58043148-a042-4825-902c-a0b7af7a4c93"
+    },
+    "single_break1": {
+      "__uuid__": "ca6bd090-755f-4b8c-8f1a-4017d6367c81"
+    },
+    "single_break2": {
+      "__uuid__": "f486f4f8-7b0a-4e0d-8f4b-cc34e0fad8e7"
+    },
+    "left": {
+      "__uuid__": "0faf08fa-322f-41e2-9215-cdc30466696e"
+    },
+    "middle_x": {
+      "__uuid__": "c7ff6e75-0e27-4ca5-b032-22e3cd3adbe8"
+    },
+    "middle_x_break": {
+      "__uuid__": "d3d2091e-beba-4ac0-a553-c53d70d68e76"
+    },
+    "right": {
+      "__uuid__": "f5967ae4-6929-43ed-8740-00f545803faf"
+    },
+    "up": {
+      "__uuid__": "a7db02a3-9e0b-4e6a-8d57-798641f4b37f"
+    },
+    "middle_y": {
+      "__uuid__": "b6dc3c60-1985-4041-a514-6f2293606546"
+    },
+    "middle_y_break": {
+      "__uuid__": "7d5f9963-f43b-4eb9-81bd-6de76b3c69bf"
+    },
+    "down": {
+      "__uuid__": "2f620770-3d04-4c24-b70d-b13bd78c1bd4"
+    },
+    "left_up": {
+      "__uuid__": "3138c38d-11a2-4332-b626-c5bfa7c8c150"
+    },
+    "right_up": {
+      "__uuid__": "15b464ad-4aa7-477c-8ba0-b894e993d9aa"
+    },
+    "left_down": {
+      "__uuid__": "18d4bb8e-bc21-4c43-909d-92f1cd4d31a0"
+    },
+    "right_down": {
+      "__uuid__": "4d575080-49ab-46b9-9a61-5b0aee240e0c"
+    },
+    "cross": {
+      "__uuid__": "a6c0f42f-11f1-49ff-b33e-f01d33c6b98f"
+    },
+    "up_cross": {
+      "__uuid__": "f648d758-ec1d-418c-aeb6-65840b6c29b3"
+    },
+    "down_cross": {
+      "__uuid__": "d68cb260-565a-404f-b360-fc244ad46df4"
+    },
+    "left_cross": {
+      "__uuid__": "a625fd97-2c81-46b4-a6ec-899c6eebd8ae"
+    },
+    "right_cross": {
+      "__uuid__": "3ecbc229-e7bc-4905-bab1-302f2c4938fa"
+    },
+    "ground1": {
+      "__uuid__": "76130f18-0432-4f96-a9e8-cdd33e3eefa7"
+    },
+    "ground2": {
+      "__uuid__": "a8b0b936-c8db-4928-bc2d-25433d107fe9"
+    },
+    "ground3": {
+      "__uuid__": "f22a5df5-6af9-4cb7-a200-1a69486308d6"
+    },
+    "ground4": {
+      "__uuid__": "e3d405c5-86b1-4af9-90c5-6043fc583386"
+    },
+    "room_gnd1_1": {
+      "__uuid__": "1b7bba1e-1da5-43e8-a50e-4102d49a6b59"
+    },
+    "room_gnd1_2": {
+      "__uuid__": "034a5b5a-664f-418e-86eb-9db0206d1d34"
+    },
+    "room_gnd1_3": {
+      "__uuid__": "8b1b0aa6-c010-461b-88ad-b7e85aa84184"
+    },
+    "room_gnd1_4": {
+      "__uuid__": "064b6627-f775-4270-a61d-493e95b981c6"
+    },
+    "stair_up": {
+      "__uuid__": "860044e8-4316-4d04-8768-2ad2a4acda6e"
+    },
+    "stair_down": {
+      "__uuid__": "601b36f2-99c3-4390-88f6-70b68a986a08"
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__id__": 0
+    },
+    "fileId": "b7MZ6uuXtFmLdIrxMPOCBi",
+    "sync": false
+  }
+]

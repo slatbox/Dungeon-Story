@@ -4,6 +4,8 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
+const HeroDescription = require("hero_description");
+const DataManager = require("DataManager");
 
 const HeroStage = cc.Class({
     extends: cc.Component,
@@ -16,7 +18,12 @@ const HeroStage = cc.Class({
            default:[],
            type:cc.Prefab
        },
-       name_label:cc.Label
+       name_label:cc.Label,
+       description:
+       {
+           default:null,
+           type: HeroDescription
+       }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -40,6 +47,11 @@ const HeroStage = cc.Class({
         this.node.addChild(this.middle);
         this.node.addChild(this.right);
         this.name_label.string = this.middle.name;
+        this.description.set_description(this.middle);
+
+        cc.director.preloadScene("main_game", function () {
+            cc.log("preload main_game");
+        });
     },
     next_occupation:function()
     {
@@ -77,6 +89,7 @@ const HeroStage = cc.Class({
 
         this.current_occupation_index = (this.current_occupation_index+1)%len;
         this.name_label.string = this.middle.name;
+        this.description.set_description(this.middle);
 
     },
     pre_occupation:function()
@@ -116,13 +129,17 @@ const HeroStage = cc.Class({
         this.current_occupation_index = (this.current_occupation_index-1+len)%len;
 
         this.name_label.string = this.middle.name;
+        this.description.set_description(this.middle);
     },
     start_game:function()
     {
-
+        var occupation = {"occupation":this.name_label.string};
+        DataManager.save_obj(occupation,"occupation");
+        cc.director.loadScene("main_game");
     }
 
 
     // update (dt) {},
 });
 
+module.exports = HeroStage;
