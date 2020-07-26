@@ -10,11 +10,6 @@ const SubRoom = cc.Class({
         left_down :cc.Vec2,
         right_up:cc.Vec2,
         virtual:0,
-        ad_rooms:
-        {
-            default:[],
-            type:SubRoom
-        },
         gate:[],
         room_type:0
     },

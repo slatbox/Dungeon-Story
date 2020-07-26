@@ -59,7 +59,9 @@ const Room = cc.Class({
         interactions:{
             default:null,
             type:InteractionManager
-        }
+        },
+        room_width:13,
+        room_height:9
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -70,7 +72,7 @@ const Room = cc.Class({
         var wall_marks = [];
         var wall_sprites = [];
         var ground_sprites = [];
-        var gate_sprites = [];
+        // var gate_sprites = [];
         var actors = [];
         var interaction_items = [];
         for(var i = 0 ; i < RoomHeight;i++)
@@ -78,7 +80,7 @@ const Room = cc.Class({
             wall_marks[i] = [];
             wall_sprites[i] = [];
             ground_sprites[i] = [];
-            gate_sprites[i] = [];
+            // gate_sprites[i] = [];
             actors[i] = [];
             interaction_items[i] = [];
 
@@ -98,7 +100,7 @@ const Room = cc.Class({
         this.wall_marks = wall_marks;
         this.wall_sprites = wall_sprites;
         this.ground_sprites = ground_sprites;
-        this.gate_sprites = gate_sprites;
+        // this.gate_sprites = gate_sprites;
         this.actors = actors;
         this.interaction_items = interaction_items;
         this.sub_rooms = [];
@@ -699,28 +701,6 @@ const Room = cc.Class({
         this.paths = null;
     
     },
-    create_normal_room:function()
-    {
-        this.init_empty_room();
-        var type_rand = Math.random();
-        if(type_rand <= 0.6)
-        {
-            this.set_rooms_layout()
-        }
-        else if(type_rand <= 0.8)
-        {
-            this.set_half_rooms_layout();
-        }
-        else if(type_rand <= 0.9)
-        {
-            this.set_spare_layout();
-        }
-        else 
-        {
-            this.set_maze_layout();
-        }
-        this.draw_room();
-    },
     is_wall:function(i,j)
     {
         if(i < 0 || i > RoomHeight-1 || j < 0 || j > RoomWidth-1)
@@ -766,79 +746,99 @@ const Room = cc.Class({
 
         var frame;
         var break_rate = 0.1;
+        var mark = "null";
         if(middle_x)
         {
             frame = this.tile_set.middle_x;
             var rand = Math.random();
+            mark ="middle_x";
             if(rand < break_rate)
             {
                 frame = this.tile_set.middle_x_break;
+                mark ="middle_x_break";
             }
+            
         }
         else if(middle_y)
         {
             frame = this.tile_set.middle_y;
             var rand = Math.random();
+            mark = "middle_y";
             if(rand < break_rate)
             {
                 frame = this.tile_set.middle_y_break;
+                mark = "middle_y_break";
             }
         }
         else if(left_up)
         {
             frame = this.tile_set.left_up;
+            mark = "left_up";
         }
         else if(right_up)
         {
             frame = this.tile_set.right_up;
+            mark = "right_up";
         }
         else if(left_down)
         {
             frame = this.tile_set.left_down;
+            mark = "left_down";
         }
         else if(right_down)
         {
             frame = this.tile_set.right_down;
+            mark = "right_down";
         }
         else if(corss)
         {
             frame = this.tile_set.cross;
+            mark = "cross";
         }
         else if(corss_left)
         {
             frame = this.tile_set.left_cross;
+            mark = "left_cross";
         }
         else if(corss_right)
         {
             frame = this.tile_set.right_cross;
+            mark = "right_cross";
         }
         else if(cross_up)
         {
             frame = this.tile_set.up_cross;
+            mark = "up_cross";
         }
         else if(cross_down)
         {
             frame = this.tile_set.down_cross;
+            mark = "down_cross";
         }
         else if(left_wall)
         {
             frame = this.tile_set.left;
+            mark = "left";
         }
         else if(right_wall)
         {
             frame = this.tile_set.right;
+            mark = "right";
         }
         else if(up_wall)
         {
             frame = this.tile_set.up;
+            mark = "up";
         }
         else if(down_wall)
         {
             frame = this.tile_set.down;
+            mark = "down";
         }
         else if(single)
         {
             frame = this.tile_set.single;
+            mark = "single";
         }
 
 
@@ -848,6 +848,7 @@ const Room = cc.Class({
         wall.anchorY = 1;
         wall.x = j * wall.width;
         wall.y = -i * wall.height;
+        wall.name = mark;
         this.node.addChild(wall);
         this.wall_sprites[i][j] = wall;
     },
@@ -961,6 +962,7 @@ const Room = cc.Class({
             gnd.addChild(shadow);
         }
         this.node.addChild(gnd);
+        gnd.name = "ground" + String(rand_gnd + 1);
         this.ground_sprites[i][j] = gnd;
     },
     draw_room:function()
@@ -1164,7 +1166,7 @@ const Room = cc.Class({
         //add gates
         if (sub_room.virtual == 0) {
             for (var i = 0; i < sub_room.gate.length; i++) {
-                var gate = cc.instantiate(this.interactions.wood_door);
+                var gate = cc.instantiate(this.interactions.unlocked_door);
                 var x = sub_room.gate[i].x;
                 var y = sub_room.gate[i].y;
                 var abs_x = TileWidth * x;
@@ -1189,6 +1191,21 @@ const Room = cc.Class({
         for(var i = 0 ; i < rooms.length;i++)
         {
             this.add_interaction(rooms[i]);
+        }
+        var room_doors = [this.up_gate,this.down_gate,this.left_gate,this.right_gate];
+        for(var i = 0 ; i < room_doors.length;i++){
+            if(!room_doors[i]) {continue;}
+            var gate = cc.instantiate(this.interactions.room_door);
+            var x = room_doors[i].x;
+            var y = room_doors[i].y;
+            gate.anchorX = 0;
+            gate.anchorY = 1;
+            var abs_x = TileWidth * x;
+            var abs_y = - TileHeight * y;
+            gate.x = abs_x;
+            gate.y = abs_y;
+            this.node.addChild(gate);
+            this.interaction_items[y][x] = gate;
         }
     },
     move_to:function(direction,hero)
@@ -1270,42 +1287,159 @@ const Room = cc.Class({
         var down_stair = cc.instantiate(this.tile_set.down_stair);
         down_stair.x = rand_j* TileWidth;
         down_stair.y = - rand_i * TileHeight;
+        down_stair.name = "down_stair";
         this.node.addChild(down_stair);
         this.interaction_items[rand_i][rand_j] = down_stair;
         //
         this.add_interactions_to_all_sub_rooms();
         this.born_ij_pos = new cc.Vec2(rand_i,rand_j);
     },
-    init:function(up,down,left,right,is_new,tile_set,decoration_tile_set,interactions)
-    {
-        if (is_new) {
-            var rand_i_left = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
-            var rand_i_right = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
-            var rand_j_up = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
-            var rand_j_down = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
+    init_from_file:function(file_name,tile_set,decoration_tile_set,interactions){
 
-            if (up) {
-                this.up_gate = new cc.Vec2(rand_j_up, 0);
-            }
-            if (down) {
-                this.down_gate = new cc.Vec2(rand_j_down, RoomHeight - 1);
-            }
-            if (left) {
-                this.left_gate = new cc.Vec2(0, rand_i_left);
-            }
-            if (right) {
-                this.right_gate = new cc.Vec2(RoomWidth - 1, rand_i_right);
-            }
-        }
         this.tile_set = tile_set;
         this.decoration_tile_set = decoration_tile_set;
         this.interactions = interactions;
+        this.node.x = 0;
+        this.node.y = 0;
+        var room_data = DataManager.read_obj(file_name);
 
-        this.init_as_born_room();
+        var room_gates = ["up_gate","down_gate","left_gate","right_gate","wall_marks"]
+        var sprites = ["ground_sprites","wall_sprites"];
+        // var prefabs = ["interaction_items","actors"]
+
+        //init born place
+        this["born_ij_pos"] = new cc.Vec2(
+            room_data["born_ij_pos"].x,
+            room_data["born_ij_pos"].y
+        );
+        
+        //init gates
+        for(var i = 0 ; i < room_gates.length;i++){
+            if(room_data[room_gates[i]]){
+                this[room_gates[i]] = new cc.Vec2(
+                    room_data[room_gates[i]].x,
+                    room_data[room_gates[i]].y
+                );
+            }
+        }
+        //init wall marks
+        this["wall_marks"] = room_data["wall_marks"];
+        //init map sprites
+        for(var k = 0 ; k < sprites.length;k++){
+            var tem = [];
+            for(var i = 0 ; i < RoomHeight; i++){
+                tem[i] = [];
+                for(var j = 0 ; j < RoomWidth; j++){
+                    var each_sprite_data = room_data[sprites[k]][i][j];
+                    if(!each_sprite_data)
+                    {
+                        continue;
+                    }
+                    var sprite = new cc.Node();
+                    cc.log(each_sprite_data);
+                    sprite.addComponent(cc.Sprite).spriteFrame = this.tile_set[each_sprite_data.name];
+                    sprite.anchorX = each_sprite_data.anchorX;
+                    sprite.anchorY = each_sprite_data.anchorY;
+                    sprite.x = each_sprite_data.x;
+                    sprite.y = each_sprite_data.y;
+                    
+                    sprite.name = each_sprite_data.name;
+                    this.node.addChild(sprite);
+                    tem[i][j] = sprite;
+                }
+            }
+            this[sprites[k]] = tem;
+        }
+        //init interactions 
+        var interaction_data = room_data["interaction_items"];
+        var interaction_sprites = [];
+        for(var i = 0 ; i < RoomHeight ; i++){
+            interaction_sprites[i] = [];
+            for(var j = 0 ; j < RoomWidth;j++){
+                var each_data = interaction_data[i][j];
+                if(!each_data){continue;}
+                cc.log(each_data);
+                var each_inter = cc.instantiate(this.interactions[each_data.name]);
+                if(!each_inter){
+                    each_inter = cc.instantiate(this.tile_set[each_data.name]);
+                }
+                each_inter.anchorX = each_data.anchorX;
+                each_inter.anchorY = each_data.anchorY;
+                each_inter.x = each_data.x;
+                each_inter.y = each_data.y;
+                each_inter.name = each_data.name;
+                this.node.addChild(each_inter);
+                interaction_sprites[i][j] = each_inter;
+            }
+        }
+        this["interaction_items"] = interaction_sprites;
+        //init actor
+        //init subroom_data
+        var sub_rooms = room_data.sub_rooms;
+        this.sub_rooms = [];
+        for(var i = 0 ; i < sub_rooms.length;i++){
+            var each_sub_room = new SubRoom;
+            each_sub_room.virtual = sub_rooms[i].virtual;
+            each_sub_room.room_type = sub_rooms[i].room_type;
+
+            each_sub_room.left_down = new cc.Vec2(
+                sub_rooms[i].left_down.x,
+                sub_rooms[i].left_down.y
+            );
+            each_sub_room.right_up = new cc.Vec2(
+                sub_rooms[i].right_up.x,
+                sub_rooms[i].right_up.y
+            );
+            var gates = sub_rooms[i].gate;
+            for(var j = 0 ; j < gates.length;j++){
+                each_sub_room.gate[j] = new cc.Vec2(
+                    gates[j].x,
+                    gates[j].y
+                );
+            }
+            this.sub_rooms.push(each_sub_room);
+        }
+    },
+    init:function(up,down,left,right,tile_set,decoration_tile_set,interactions,born)
+    {
+        
+        var rand_i_left = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
+        var rand_i_right = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
+        var rand_j_up = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
+        var rand_j_down = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
+
+        if (up) {
+            this.up_gate = new cc.Vec2(rand_j_up, 0);
+        }
+        if (down) {
+            this.down_gate = new cc.Vec2(rand_j_down, RoomHeight - 1);
+        }
+        if (left) {
+            this.left_gate = new cc.Vec2(0, rand_i_left);
+        }
+        if (right) {
+            this.right_gate = new cc.Vec2(RoomWidth - 1, rand_i_right);
+        }
+
+        this.tile_set = tile_set;
+        this.decoration_tile_set = decoration_tile_set;
+        this.interactions = interactions;
+        if(born){
+            this.init_as_born_room();
+        }
+        else{
+            this.init_as_normal_room();
+        }
+        
     },
     onLoad:function()
     {
         
+    },
+    onEnable:function()
+    {
+        this.node.opacity = 0;
+        this.node.runAction(cc.fadeIn(0.5));
     }
 
     

@@ -9,7 +9,8 @@ const InteractionManager = cc.Class({
     extends: cc.Component,
 
     properties: {
-        wood_door:cc.Prefab
+        unlocked_door:cc.Prefab,
+        room_door:cc.Prefab
     },
 
 

@@ -152,33 +152,67 @@ const GameWorld = cc.Class({
             }
         }
         this.walls = walls;
+        cc.log(this.walls);
     },
-    is_wall:function(i,j)
+    is_room:function(i,j)
     {
         if(i < 0 || i > 4 || j < 0 || j > 4)
         {
             return 0;
         }
-        return this.walls[i][j];
+        return !this.walls[i][j];
+    },
+    is_adjacient:function(pos1,pos2)
+    {
+        var invalid1 = (pos1.x < 0 || pos1.x > 2 || pos1.y < 0 || pos1.y > 2);
+        var invalid2 = (pos2.x < 0 || pos2.x > 2 || pos2.y < 0 || pos2.y > 2);
+        if(invalid1 || invalid2){
+            return false;
+        }
+        var sub = new cc.Vec2(pos2.x - pos1.x,pos2.y - pos1.y);
+        return !this.walls[2*pos1.x + sub.x][2*pos1.y + sub.y];
     },
     init_rooms:function()
     {
+
         var rooms_num = 3;
+        this.init_walls_between_rooms();
+        var rand_i = Math.floor(Math.random() * rooms_num);
+        var rand_j = Math.floor(Math.random() * rooms_num);
+        
+        this.rooms = [];
+        for(var i = 0 ; i < 3;i++){
+            this.rooms[i] = [];
+            for(var j = 0 ; j < 3;j++){
+                var born = false;
+                if(i == rand_i && j == rand_j){
+                    born = true;
+                }
+                var each_room = new cc.Node();
+                var up = this.is_room(2*i - 1, 2*j);
+                var down = this.is_room(2*i + 1, 2*j);
+                var left = this.is_room(2*i, 2*j - 1);
+                var right = this.is_room(2*i, 2*j + 1);
+                each_room.addComponent(Room).init(up, down, left, right,
+                    this.tile_set, this.decoration_tile_set, this.interactions,
+                    born);
+                each_room.x = 0;
+                each_room.y = 0;
+                this.rooms[i][j] = each_room;
+                each_room.active = false;
+                this.node.addChild(each_room);
+            }
+        }
 
-       this.init_walls_between_rooms();
-       var rand_i = Math.floor(Math.random()*rooms_num) * 2;
-       var rand_j = Math.floor(Math.random()*rooms_num) * 2;
-       var up = !this.is_wall(rand_i-1,rand_j);
-       var down = !this.is_wall(rand_i+1,rand_j);
-       var left = !this.is_wall(rand_i,rand_j - 1);
-       var right = !this.is_wall(rand_i,rand_j + 1);
-       var start_room = new cc.Node();
-       start_room.addComponent(Room).init(up,down,left,right,1,this.tile_set,this.decoration_tile_set,this.interactions);
 
-       start_room.x = 0;
-       start_room.y = 0;
-       this.current_room = start_room;
-       this.node.addChild(start_room);
+        
+    
+        
+        this.current_room = this.rooms[rand_i][rand_j];
+        this.current_room.active = true;
+        this.current_pos = new cc.Vec2(rand_i,rand_j);
+
+       DataManager.save_room(this.current_room.getComponent("room"),"room_test");
 
     },
     init_hero:function()
@@ -191,7 +225,7 @@ const GameWorld = cc.Class({
         hero.x = real_pos.x;
         hero.y = real_pos.y;
         hero.getComponent("hero").current_pos = real_pos.clone();
-        this.node.addChild(hero);
+        this.current_room.addChild(hero);
         this.hero = hero;
     },
     deal_with_touch:function(event_pos)
@@ -241,6 +275,38 @@ const GameWorld = cc.Class({
             }
         }
         
+    },
+    enter_room:function(relative_pos)
+    {
+        var new_pos = new cc.Vec2(
+            this.current_pos.x + relative_pos.x,
+            this.current_pos.y + relative_pos.y
+        )
+        this.current_pos = new_pos;
+        this.current_room.active = 0;
+        this.current_room = this.rooms[new_pos.x][new_pos.y];
+        this.current_room.active = 1;
+        var mini_map = cc.find("mini_map").getComponent("mini_map");
+        var gate;
+        if(relative_pos.x < 0){
+            gate = this.current_room.getComponent("room").down_gate;
+        }
+        else if(relative_pos.x > 0){
+            gate = this.current_room.getComponent("room").up_gate;
+        }
+        else if(relative_pos.y < 0){
+            gate = this.current_room.getComponent("room").right_gate;
+        }
+        else{
+            gate = this.current_room.getComponent("room").left_gate;
+        }
+        var hero_pos = this.current_room.getComponent("room").convertIJ2Pos(new cc.Vec2(gate.y,gate.x));
+        this.hero.x = hero_pos.x;
+        this.hero.y = hero_pos.y;
+        this.hero.removeFromParent(false);
+        this.hero.getComponent("hero").current_pos = new cc.Vec2(this.hero.x,this.hero.y);
+        this.current_room.addChild(this.hero);
+        mini_map.set_current(this.current_pos);
     },
     onLoad:function()
     {
