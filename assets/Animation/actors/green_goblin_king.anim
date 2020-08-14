@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "green_goblin_king",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0333333333333334,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "462cdc4f-ab33-4daa-a9ff-1932e8a0bd80"
+            }
+          },
+          {
+            "frame": 0.5166666666666667,
+            "value": {
+              "__uuid__": "0ce9ad3a-9f97-43b1-8404-6f17dd08bd90"
+            }
+          },
+          {
+            "frame": 1.0166666666666666,
+            "value": {
+              "__uuid__": "462cdc4f-ab33-4daa-a9ff-1932e8a0bd80"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

@@ -18,7 +18,10 @@ cc.Class({
         {
             default:[],
             type: cc.AudioClip
-        }
+        },
+        current_hp:0,
+        normal_keys:0,
+        gold:0
     },
 
     move:function(direction)
@@ -61,11 +64,23 @@ cc.Class({
         this.node.runAction(seq);
         
     },
-    onLoad:function()
+    update_info_table:function()
     {
-    
-        
+        var table = cc.find("BasicInfomation").getComponent("basic_info_table");
+        var to_set = ["current_hp","gold","normal_keys"];
+        for(var i = 0 ; i < to_set.length;i++){
+            table.set_label(to_set[i],this[to_set[i]]);
+        }
+    },
+    set_value:function(label,value)
+    {
+        this[label] = value;
+        this.update_info_table();
+    },
+    start:function()
+    {
+        this.current_hp = this.node.getComponent("creature").HP;
+        this.update_info_table();
     }
-
     // update (dt) {},
 });

@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "orc",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0166666666666666,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "4ab54cbf-a907-4515-9f7e-e51d16e3d2c6"
+            }
+          },
+          {
+            "frame": 0.5166666666666667,
+            "value": {
+              "__uuid__": "c84248cd-6579-4f49-8f66-b24e59f44385"
+            }
+          },
+          {
+            "frame": 1,
+            "value": {
+              "__uuid__": "4ab54cbf-a907-4515-9f7e-e51d16e3d2c6"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

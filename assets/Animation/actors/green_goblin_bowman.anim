@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "green_goblin_bowman",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0333333333333334,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "cd8e05ea-cd9d-4141-aa5c-d12af34d5f69"
+            }
+          },
+          {
+            "frame": 0.5166666666666667,
+            "value": {
+              "__uuid__": "89a10202-f925-4beb-aa6e-8f5f0abb9635"
+            }
+          },
+          {
+            "frame": 1.0166666666666666,
+            "value": {
+              "__uuid__": "cd8e05ea-cd9d-4141-aa5c-d12af34d5f69"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

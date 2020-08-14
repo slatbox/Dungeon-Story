@@ -9,15 +9,30 @@ const ActorPrefabManager = cc.Class({
     extends: cc.Component,
 
     properties: {
-        fighter:cc.Prefab,
-        robber:cc.Prefab,
-        ranger:cc.Prefab,
-        red_demon:cc.Prefab,
-        black_bat:cc.Prefab,
-        red_bat:cc.Prefab,
-        green_slime:cc.Prefab,
-        purple_slime:cc.Prefab
-
+        level1:{
+            default:[],
+            type:cc.Prefab
+        },
+        level2:{
+            default:[],
+            type:cc.Prefab
+        },
+        level3:{
+            default:[],
+            type:cc.Prefab
+        },
+        special:{
+            default:[],
+            type:cc.Prefab
+        }
     },
+    random_foe:function(level){
+        var rand = Math.floor(Math.random() * this.level1.length);
+        var label = "level" + String(level);
+        var foe = cc.instantiate(this[label][rand]);
+        foe.anchorX = 0.5;
+        foe.anchorY = 0;
+        return foe;
+    }
 });
 module.exports = ActorPrefabManager;

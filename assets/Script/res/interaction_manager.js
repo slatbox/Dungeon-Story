@@ -10,8 +10,47 @@ const InteractionManager = cc.Class({
 
     properties: {
         unlocked_door:cc.Prefab,
-        room_door:cc.Prefab
+        room_door:cc.Prefab,
+        actor_statue:{
+            default:[],
+            type:cc.SpriteFrame
+        },
+        white_statue:{
+            default:[],
+            type:cc.SpriteFrame
+        },
+        furniture:{
+            default:[],
+            type:cc.SpriteFrame
+        },
+        normal_jar:cc.Prefab,
+        gold:cc.Prefab
     },
+    
+    random_interaction:function()
+    {
+        var sets = [this.actor_statue,this.furniture];
+        var using_set = sets[Math.floor(Math.random() * sets.length)];
+        var using_frame = using_set[Math.floor(Math.random() * using_set.length)];
+        var inter = new cc.Node();
+        
+        inter.addComponent(cc.Sprite).spriteFrame = using_frame;
+        return inter;
+    },
+    random_instant_item:function()
+    {
+        var instant_items = [this.gold];
+        var item = cc.instantiate(instant_items[Math.floor(Math.random() * instant_items.length)]);
+       
+        return item;
+    },
+    create_normal_jar:function()
+    {
+        var jar = cc.instantiate(this.normal_jar);
+        
+        return jar;
+    },
+    
 
 
 });

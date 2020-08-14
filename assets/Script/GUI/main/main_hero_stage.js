@@ -23,7 +23,9 @@ const MainHeroStage = cc.Class({
     },
     onLoad:function()
     {
-        
+        // var describe = this.node.getChildByName("describe");
+        // describe.getComponent("hero_description").set_description()
+
     },
 
     // update (dt) {},

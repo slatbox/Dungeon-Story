@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+const MainHeroStage = require("../GUI/main/main_hero_stage");
+
 const SubRoom = cc.Class({
     properties: {
         left_down :cc.Vec2,
@@ -13,28 +15,51 @@ const SubRoom = cc.Class({
         gate:[],
         room_type:0
     },
-    get_pos_in_front_gate:function()
+    get_pos_in_front_gate:function(test_gate)
     {
-        var gate = this.gate;
-        if(gate.x == this.left_down.x)//down wall
+        if(test_gate.x  == this.left_down.x - 1)//left wall
         {
-            return new cc.Vec2(gate.x-1,gate.y);
+            return new cc.Vec2(test_gate.x+1,test_gate.y);
         }
-        else if(gate.x == this.right_up.x)//up wall
+        else if(test_gate.x == this.right_up.x+1)//right wall
         {
-            return new cc.Vec2(gate.x+1,gate.y);
+            return new cc.Vec2(test_gate.x-1,test_gate.y);
         }
-        else if(gate.y == this.left_down.y) //left wall
+        else if(test_gate.y == this.left_down.y - 1) //up wall
         {
-            return new cc.Vec2(gate.x,gate.y+1);
+            return new cc.Vec2(test_gate.x,test_gate.y+1);
         }
         else//(gate.y == sub_room.right_up.y)//right wall
         {
-            return new cc.Vec2(gate.x,gate.y-1);
+            return new cc.Vec2(test_gate.x,test_gate.y-1);
         }
+    },
+    is_in_list:function(pos,List)
+    {
+        for(var i = 0 ; i < List.length;i++)
+        {
+            if(pos.x == List[i].x && pos.y == List[i].y){
+                return true;
+            }
+        }
+        return false;
+    },
+    
+    is_in_front_of_gate:function(ij_pos)
+    {
+        //pos is a ij_pos
+        for(var i = 0 ; i < this.gate.length;i++){
+            var ij_gate_pos = new cc.Vec2(this.gate[i].y,this.gate[i].x);
+            var coutner = Math.abs(ij_pos.x - ij_gate_pos.x) + Math.abs(ij_pos.y - ij_gate_pos.y);
+            if(coutner <= 1){
+                return true;
+            }
+        }
+        return false;
     },
     is_gate:function(v)
     {
+        //v is a draw_ij_pos
         for(var i = 0 ; i < this.gate.length;i++)
         {
             if(v.x == this.gate[i].x && v.y == this.gate[i].y)
@@ -43,6 +68,34 @@ const SubRoom = cc.Class({
             }
         }
         return false;
+    },
+    random_pos:function()
+    {
+        var i_start = this.right_up.y;
+        var i_end = this.left_down.y;
+        var j_start = this.left_down.x;
+        var j_end = this.right_up.x;
+        var rand_i = Math.floor(Math.random() * (i_end - i_start + 1)) + i_start;
+        var rand_j = Math.floor(Math.random() * (j_end - j_start + 1)) + j_start;
+        return new cc.Vec2(rand_i,rand_j);
+    }, 
+    random_pos_beside_wall:function()
+    {
+        //return ij_pos
+        var i_start = this.right_up.y;
+        var i_end = this.left_down.y;
+        var j_start = this.left_down.x;
+        var j_end = this.right_up.x;
+        var valid_pos = [];
+        for(var i = i_start;i <= i_end;i++){
+            for(var j = j_start;j <= j_end;j++){
+                if((i == i_start || i == i_end || j == j_start || j == j_end) &&
+                    !this.is_in_front_of_gate(new cc.Vec2(i,j))){
+                    valid_pos.push(new cc.Vec2(i,j));
+                }
+            }
+        }
+        return valid_pos[Math.floor(Math.random() * valid_pos.length)];
     },
     random_wall_place:function()
     {

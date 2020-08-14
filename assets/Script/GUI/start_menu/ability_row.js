@@ -21,7 +21,7 @@ const AbilityRow = cc.Class({
     set_level:function(level)
     {
         this.level = level;
-        var max_level = 10;
+        var max_level = 6;
         for(var i = 0; i < max_level;i++)
         {
             if(i < this.level)

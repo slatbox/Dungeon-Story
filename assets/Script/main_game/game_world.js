@@ -11,6 +11,7 @@ const Set = require("Set");
 const DecorationTileManager = require("decoration_tile_manager");
 const InteractionManager = require("interaction_manager");
 const OccupationPrefabManager = require("occupation_prefab_manager");
+const ActorPrefabManager = require("actor_prefab_manager");
 const DataManager = require("DataManager");
 const GameWorld = cc.Class({
     extends: cc.Component,
@@ -32,6 +33,11 @@ const GameWorld = cc.Class({
             default:null,
             type:OccupationPrefabManager
         },
+        actor_set:{
+            default:null,
+            type:ActorPrefabManager
+        },
+        game_BGM:cc.AudioClip
 
     },
     search_path:function(point)
@@ -193,8 +199,10 @@ const GameWorld = cc.Class({
                 var down = this.is_room(2*i + 1, 2*j);
                 var left = this.is_room(2*i, 2*j - 1);
                 var right = this.is_room(2*i, 2*j + 1);
-                each_room.addComponent(Room).init(up, down, left, right,
-                    this.tile_set, this.decoration_tile_set, this.interactions,
+                each_room.addComponent(Room).init(
+                    up, down, left, right,
+                    this.tile_set, this.decoration_tile_set, 
+                    this.interactions,this.actor_set,
                     born);
                 each_room.x = 0;
                 each_room.y = 0;
@@ -203,16 +211,11 @@ const GameWorld = cc.Class({
                 this.node.addChild(each_room);
             }
         }
-
-
-        
-    
-        
         this.current_room = this.rooms[rand_i][rand_j];
         this.current_room.active = true;
         this.current_pos = new cc.Vec2(rand_i,rand_j);
 
-       DataManager.save_room(this.current_room.getComponent("room"),"room_test");
+       
 
     },
     init_hero:function()
@@ -312,7 +315,7 @@ const GameWorld = cc.Class({
     {
         this.init_rooms();
         this.init_hero();
-        
+        cc.audioEngine.playMusic(this.game_BGM);
     },
 
     

@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 const ActorPrefabManager = require("actor_prefab_manager");
 const DataManager = require("DataManager");
+const OccupationPrefabManager = require("occupation_prefab_manager")
 cc.Class({
     extends: cc.Component,
 
@@ -19,7 +20,7 @@ cc.Class({
         background_music: cc.AudioClip,
         actor_prefab_manager:{
             default:null,
-            type: ActorPrefabManager
+            type: OccupationPrefabManager
         },
         hero_stage:{
             default:null,

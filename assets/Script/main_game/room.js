@@ -11,6 +11,7 @@ const Set = require("Set");
 const DecorationTileManager = require("decoration_tile_manager");
 const InteractionManager = require("interaction_manager");
 const DataManager = require("DataManager");
+const ActorPrefabManager = require("actor_prefab_manager");
 const TileWidth = 72;
 const TileHeight = 72;
 const RoomWidth = 13;
@@ -59,6 +60,10 @@ const Room = cc.Class({
         interactions:{
             default:null,
             type:InteractionManager
+        },
+        actor_set:{
+            default:null,
+            type:ActorPrefabManager
         },
         room_width:13,
         room_height:9
@@ -438,7 +443,7 @@ const Room = cc.Class({
         var r5 = Math.random();
         var r6 = Math.random();
 
-        var space_rate = 0.3;
+        var space_rate = 0.45;
         if (r1 < space_rate) {
             room1.virtual = 1;
         }
@@ -863,6 +868,18 @@ const Room = cc.Class({
         }
         return false;
     },
+    is_in_front_of_gate:function(ij_pos)
+    {
+        var gates = this.get_valid_gates();
+        for(var i = 0 ; i < gates.length;i++){
+            var ij_gate_pos = new cc.Vec2(gates[i].y,gates[i].x);
+            var counter = Math.abs(ij_pos.x - ij_gate_pos.x) + Math.abs(ij_pos.y - ij_gate_pos.y);
+            if(counter <= 1){
+                return true;
+            }
+        }
+        return false;
+    },
     set_gates:function()
     {
         if(this.up_gate != null)
@@ -1161,6 +1178,25 @@ const Room = cc.Class({
             this.decorate_sub_room(rooms[i]);
         }
     },
+    get_valid_gates:function()
+    {
+        var gates = [this.up_gate,this.down_gate,this.left_gate,this.right_gate];
+        var ret = [];
+        for(var i = 0 ; i < gates.length;i++){
+            if(gates[i]){
+                ret.push(gates[i]);
+            }
+        }
+        return ret;
+    },
+    is_occupied:function(ij_pos)
+    {
+        if(this.interaction_items[ij_pos.x][ij_pos.y] || this.actors[ij_pos.x][ij_pos.y]){
+            return true;
+        }
+        return false;
+    },
+
     add_interaction_single_room:function(sub_room)
     {
         //add gates
@@ -1177,6 +1213,26 @@ const Room = cc.Class({
                 this.interaction_items[y][x] = gate;
             }
         }
+        // add decoration interactions 
+        var pos = sub_room.random_pos_beside_wall();
+        while(this.is_occupied(pos) || this.is_in_front_of_gate(pos)){
+            pos = sub_room.random_pos_beside_wall();
+        }
+        var deco_inter = this.interactions.random_interaction();
+        deco_inter.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + 0.5 * TileHeight));
+        this.interaction_items[pos.x][pos.y] = deco_inter;
+        this.node.addChild(deco_inter);
+        //add jar 
+        pos = sub_room.random_pos();
+        while(this.is_occupied(pos)){
+            pos = sub_room.random_pos();
+        }
+        var jar = this.interactions.create_normal_jar();
+        jar.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + 0.5 * TileHeight));
+        jar.pos = pos;
+        this.interaction_items[pos.x][pos.y] = jar;
+        this.node.addChild(jar);
+
     },
     add_interaction:function(sub_room)
     {
@@ -1208,6 +1264,29 @@ const Room = cc.Class({
             this.interaction_items[y][x] = gate;
         }
     },
+    add_actor_single_sub_rooms:function(sub_room)
+    {
+        var random_pos = sub_room.random_pos();
+        while(this.is_occupied(random_pos)){
+            random_pos = sub_room.random_pos();
+        }
+        var foe = this.actor_set.random_foe(1);
+        var foe_pos = this.convertIJ2Pos(random_pos);
+        foe.x = foe_pos.x;
+        foe.y = foe_pos.y;
+        this.node.addChild(foe);
+        this.actors[random_pos.x][random_pos.y] = foe;
+    },
+    add_actors:function()
+    {
+        var sub_rooms = this.sub_rooms;
+        for(var i = 0 ; i < sub_rooms.length;i++){
+            if(sub_rooms[i].room_type == SubRoomType.single_room){
+                this.add_actor_single_sub_rooms(sub_rooms[i]); 
+            }
+        }
+    },
+
     move_to:function(direction,hero)
     {
         var absolute_pos = hero.getComponent("hero").current_pos;
@@ -1222,11 +1301,16 @@ const Room = cc.Class({
         }
         else if(this.actors[i][j] != null)
         {
-
+            var fight_stage = cc.find("Canvas/fight_stage");
+            cc.find("Canvas").getComponent("player_controller").enabled = false;
+            var foe = this.actors[i][j];
+            this.actors[i][j] = null;
+            fight_stage.active = true;
+            fight_stage.getComponent("fight_stage").init(hero,foe,this.node);
+            this.node.active = false;
         }
         else if(this.interaction_items[i][j] != null)
         {
-            
             this.interaction_items[i][j].getComponent(this.interaction_items[i][j].name).act(hero,direction);
         }
         else // empty
@@ -1260,6 +1344,7 @@ const Room = cc.Class({
         this.draw_room();
         this.decorate_all_sub_rooms();
         this.add_interactions_to_all_sub_rooms();
+        this.add_actors();
     },
     init_as_born_room:function()
     {
@@ -1292,6 +1377,7 @@ const Room = cc.Class({
         this.interaction_items[rand_i][rand_j] = down_stair;
         //
         this.add_interactions_to_all_sub_rooms();
+        this.add_actors();
         this.born_ij_pos = new cc.Vec2(rand_i,rand_j);
     },
     init_from_file:function(file_name,tile_set,decoration_tile_set,interactions){
@@ -1400,7 +1486,7 @@ const Room = cc.Class({
             this.sub_rooms.push(each_sub_room);
         }
     },
-    init:function(up,down,left,right,tile_set,decoration_tile_set,interactions,born)
+    init:function(up,down,left,right,tile_set,decoration_tile_set,interactions,actor_set,born)
     {
         
         var rand_i_left = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
@@ -1424,6 +1510,7 @@ const Room = cc.Class({
         this.tile_set = tile_set;
         this.decoration_tile_set = decoration_tile_set;
         this.interactions = interactions;
+        this.actor_set = actor_set;
         if(born){
             this.init_as_born_room();
         }

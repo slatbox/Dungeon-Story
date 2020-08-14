@@ -1,0 +1,49 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "bubble_purple",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.9333333333333333,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "39d43e59-645f-4c0a-800e-c60fc2975f35"
+            }
+          },
+          {
+            "frame": 0.3333333333333333,
+            "value": {
+              "__uuid__": "ce7113ba-4724-4151-adcc-cca661f476d6"
+            }
+          },
+          {
+            "frame": 0.5666666666666667,
+            "value": {
+              "__uuid__": "bfdb3514-fc02-4cec-868c-7b178161bea4"
+            }
+          },
+          {
+            "frame": 0.85,
+            "value": {
+              "__uuid__": "91b9abd4-248f-45b8-9b96-b19d21067898"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "frame": 0.9333333333333333,
+      "func": "destroy",
+      "params": []
+    }
+  ]
+}
