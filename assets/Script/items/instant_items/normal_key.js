@@ -18,17 +18,27 @@ cc.Class({
 
     act:function(hero,direction)
     {
+        hero.getComponent("hero").charge(direction);
+        var call = function()
+        {
+            var seq = cc.sequence(
+                cc.spawn(
+                    cc.moveBy(0.5,0,40).easing(cc.easeBounceIn()),
+                    cc.fadeOut(0.5)
+                ),
+                cc.removeSelf()
+            );
+            var hero_cmp = hero.getComponent("hero");
+            hero_cmp.set_value("normal_keys",hero_cmp.normal_keys + 1);
+            this.node.runAction(seq);
+            cc.audioEngine.playEffect(this.sound_effect,false);
+            this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = null;
+        };
         var seq = cc.sequence(
-            cc.spawn(
-                cc.moveBy(0.5,0,40).easing(cc.easeBounceIn()),
-                cc.fadeOut(0.5)
-            ),
-            cc.removeSelf()
-        );
-        var hero_cmp = hero.getComponent("hero");
-        hero_cmp.set_value("normal_keys",hero_cmp.normal_keys + 1);
+            cc.delayTime(hero.getComponent("hero").moving_time * 0.5),
+            cc.callFunc(call,this)
+        )
         this.node.runAction(seq);
-        cc.audioEngine.playEffect(this.sound_effect,false);
     }
 
     // update (dt) {},

@@ -24,7 +24,9 @@ const InteractionManager = cc.Class({
             type:cc.SpriteFrame
         },
         normal_jar:cc.Prefab,
-        gold:cc.Prefab
+        gold:cc.Prefab,
+        normal_key:cc.Prefab,
+        blood:cc.Prefab
     },
     
     random_interaction:function()
@@ -39,7 +41,7 @@ const InteractionManager = cc.Class({
     },
     random_instant_item:function()
     {
-        var instant_items = [this.gold];
+        var instant_items = [this.gold,this.normal_key,this.blood];
         var item = cc.instantiate(instant_items[Math.floor(Math.random() * instant_items.length)]);
        
         return item;
@@ -47,7 +49,8 @@ const InteractionManager = cc.Class({
     create_normal_jar:function()
     {
         var jar = cc.instantiate(this.normal_jar);
-        
+        jar.anchorX = 0.5;
+        jar.anchorY = 0;
         return jar;
     },
     

@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const MainHeroStage = require("../GUI/main/main_hero_stage");
+const TileWidth = 72;
 
 cc.Class({
     extends: cc.Component,
@@ -13,7 +14,8 @@ cc.Class({
     properties: {
         state2:cc.SpriteFrame,
         state3:cc.SpriteFrame,
-        sound_effect: cc.AudioClip
+        sound_effect: cc.AudioClip,
+        virtual_rate:0.5
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -45,7 +47,7 @@ cc.Class({
                 var interaction_set = cc.find("InteractionManager").getComponent("interaction_manager");
                 var item = interaction_set.random_instant_item();
                 item.x = this.node.x;
-                item.y = this.node.y;
+                item.y = this.node.y + 0.5 * TileWidth;
                 item.pos = this.node.pos;
                 this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = item;
                 this.node.parent.addChild(item);
@@ -61,9 +63,23 @@ cc.Class({
     },
     
     start:function(){
-        var frames = [this.node.getComponent(cc.Sprite).spriteFrame,this.state2,this.state3];
-        this.state = Math.floor(Math.random() * 3) ;
-        this.node.getComponent(cc.Sprite).spriteFrame = frames[this.state];
+        var virtual_rand = Math.random();
+        if(virtual_rand < this.virtual_rate){
+            var interaction_set = cc.find("InteractionManager").getComponent("interaction_manager");
+            var item = interaction_set.random_instant_item();
+            item.x = this.node.x;
+            item.y = this.node.y + 0.5 * TileWidth;
+            item.pos = this.node.pos;
+            this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = item;
+            this.node.parent.addChild(item);
+            this.node.runAction(cc.removeSelf());
+        }
+        else{
+            var frames = [this.node.getComponent(cc.Sprite).spriteFrame,this.state2,this.state3];
+            this.state = Math.floor(Math.random() * 3) + 1;
+            this.node.getComponent(cc.Sprite).spriteFrame = frames[this.state - 1];
+        }
+        
     }
     // update (dt) {},
 });

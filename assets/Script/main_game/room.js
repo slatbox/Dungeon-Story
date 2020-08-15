@@ -1228,7 +1228,7 @@ const Room = cc.Class({
             pos = sub_room.random_pos();
         }
         var jar = this.interactions.create_normal_jar();
-        jar.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + 0.5 * TileHeight));
+        jar.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + TileHeight));
         jar.pos = pos;
         this.interaction_items[pos.x][pos.y] = jar;
         this.node.addChild(jar);
