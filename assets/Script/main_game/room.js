@@ -1,10 +1,40 @@
-// Learn cc.Class:
-//  - https://docs.cocos.com/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
-
+/*
+ * @Author: Jeffrey.Swen
+ * @Date: 2020-07-03 17:00:41
+ * @LastEditTime: 2020-08-16 21:21:28
+ * @LastEditors: Please set LastEditors
+ * 
+ * @Description: used to create a room object. One room is created in the sequence:
+ * 
+ * set blank room--> arrange objects
+ * 
+ * set blank room: split room into many sub rooms -->set walls positions by a 
+ * 2d-bool-array  --> add ground and wall sprites --> decorate sub rooms
+ * 
+ * arrange objects: --> add gates --> add items --> add actors
+ * 
+ * @Features:
+ * 
+ * 1: coordinates used in this class fall into two categories:real_world_pos and ij_pos
+ * real_world_pos means the original position in game coordinates system,while ij_pos
+ * means the position in this room's 2d tile-array,ij_pos.x denotes the row position,
+ * ij_pos.t denotes the column postion.
+ * 
+ * 2: Each room has several layers,everyting in each layer is saved in a 2d-array,the
+ * tile in ij_pos(0,0) means the left up corner tile. All layers from bottom to top are
+ * 
+ * this.ground_sprites
+ * this.wall_sprites
+ * this.touchable_sprites 
+ * 
+ * 3: Beside layer arraies, there is a wall_mark array used to mark that if a position 
+ * in some ij_pos is occupied. 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 const TileManager = require("tile_manager");
 const SubRoom = require("sub_room");
 const Set = require("Set");
@@ -12,10 +42,8 @@ const DecorationTileManager = require("decoration_tile_manager");
 const InteractionManager = require("interaction_manager");
 const DataManager = require("DataManager");
 const ActorPrefabManager = require("actor_prefab_manager");
-const TileWidth = 72;
-const TileHeight = 72;
-const RoomWidth = 13;
-const RoomHeight = 9;
+
+
 
 const RoomType = cc.Enum({
     born_room:0,
@@ -66,7 +94,8 @@ const Room = cc.Class({
             type:ActorPrefabManager
         },
         room_width:13,
-        room_height:9
+        room_height:9,
+        tile_width:72
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -80,7 +109,7 @@ const Room = cc.Class({
         // var gate_sprites = [];
         var actors = [];
         var interaction_items = [];
-        for(var i = 0 ; i < RoomHeight;i++)
+        for(var i = 0 ; i < this.room_height;i++)
         {
             wall_marks[i] = [];
             wall_sprites[i] = [];
@@ -89,9 +118,9 @@ const Room = cc.Class({
             actors[i] = [];
             interaction_items[i] = [];
 
-            for(var j = 0;j < RoomWidth;j++)
+            for(var j = 0;j < this.room_width;j++)
             {
-                if(i == 0 || i == RoomHeight-1 || j == 0 || j == RoomWidth-1)
+                if(i == 0 || i == this.room_height-1 || j == 0 || j == this.room_width-1)
                 {
                     wall_marks[i][j] = 1;
                 }
@@ -117,10 +146,10 @@ const Room = cc.Class({
         {
             return;
         }
-        var i_start = sub_room.right_up.y-1;
-        var i_end = sub_room.left_down.y+1;
-        var j_start = sub_room.left_down.x-1;
-        var j_end = sub_room.right_up.x+1;
+        var i_start = sub_room.right_up.x-1;
+        var i_end = sub_room.left_down.x+1;
+        var j_start = sub_room.left_down.y-1;
+        var j_end = sub_room.right_up.y+1;
         for(var i = i_start;i<=i_end;i++)
         {
             this.wall_marks[i][j_start] = 1;
@@ -133,7 +162,7 @@ const Room = cc.Class({
         }
         for(var i = 0 ; i < sub_room.gate.length;i++)
         {
-            this.wall_marks[sub_room.gate[i].y][sub_room.gate[i].x] = 0;
+            this.wall_marks[sub_room.gate[i].x][sub_room.gate[i].y] = 0;
         }
             
     },
@@ -161,26 +190,26 @@ const Room = cc.Class({
         }
         else if(split_type == SplitType.row_type)
         {
-            var middle = Math.floor(RoomHeight/2);
-            var wall_length = Math.floor(Math.random()*(RoomWidth/2));
+            var middle = Math.floor(this.room_height/2);
+            var wall_length = Math.floor(Math.random()*(this.room_width/2));
             for(var i = 0;i < wall_length;i++)
             {
                 this.wall_marks[middle][i] = 1;
             }
-            for(var i = RoomWidth-1;i>=RoomWidth - wall_length;i--)
+            for(var i = this.room_width-1;i>=this.room_width - wall_length;i--)
             {
                 this.wall_marks[middle][i] = 1;
             }
         }
         else
         {
-            var middle = Math.floor(RoomWidth/2);
-            var wall_length = Math.floor(Math.random()*(RoomHeight/2));
+            var middle = Math.floor(this.room_width/2);
+            var wall_length = Math.floor(Math.random()*(this.room_height/2));
             for(var i = 0;i < wall_length;i++)
             {
                 this.wall_marks[i][middle] = 1;
             }
-            for(var i = RoomHeight -1;i>=RoomHeight - wall_length;i--)
+            for(var i = this.room_height -1;i>=this.room_height - wall_length;i--)
             {
                 this.wall_marks[i][middle] = 1;
             }
@@ -202,19 +231,19 @@ const Room = cc.Class({
             var gate_y;
             if(is_down)
             {
-                down_y = RoomHeight-1-1;
+                down_y = this.room_height-1-1;
                 up_y = down_y-(sub_room_height-1);
                 gate_y = up_y-1;
                 hall_room.left_down = new cc.Vec2(1,up_y - 2);
-                hall_room.right_up = new cc.Vec2(RoomWidth - 2,1);
+                hall_room.right_up = new cc.Vec2(this.room_width - 2,1);
             }
             else 
             {
                 down_y = sub_room_height;
                 up_y = 1;
                 gate_y = down_y+1;
-                hall_room.left_down = new cc.Vec2(1,RoomHeight - 2);
-                hall_room.right_up = new cc.Vec2(RoomWidth-2,down_y + 2);
+                hall_room.left_down = new cc.Vec2(1,this.room_height - 2);
+                hall_room.right_up = new cc.Vec2(this.room_width-2,down_y + 2);
             }
             
             hall_room.virtual = true;
@@ -243,23 +272,23 @@ const Room = cc.Class({
                     room3.virtual = 1;
                 }
 
-                hall_room.left_down = new cc.Vec2(1,)
-                room1.left_down = new cc.Vec2(1,down_y);
-                room1.right_up = new cc.Vec2(sub_room_width,up_y);
-                room1.gate = [new cc.Vec2(2,gate_y)];
+                hall_room.left_down = new cc.Vec2(up_y-2,1)
+                room1.left_down = new cc.Vec2(down_y,1);
+                room1.right_up = new cc.Vec2(up_y,sub_room_width);
+                room1.gate = [new cc.Vec2(gate_y,2)];
                 room1.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room1);
                 
-                room2.left_down = new cc.Vec2(sub_room_width+2,down_y);
-                room2.right_up = new cc.Vec2(2*sub_room_width+1,up_y);
-                room2.gate = [new cc.Vec2(sub_room_width+3,gate_y)];
+                room2.left_down = new cc.Vec2(down_y,sub_room_width+2);
+                room2.right_up = new cc.Vec2(up_y,2*sub_room_width+1);
+                room2.gate = [new cc.Vec2(gate_y,sub_room_width+3)];
                 room2.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room2);
 
                 
-                room3.left_down = new cc.Vec2(2*sub_room_width+3,down_y);
-                room3.right_up = new cc.Vec2(3*sub_room_width+2,up_y);
-                room3.gate = [new cc.Vec2(2*sub_room_width+4,gate_y)];
+                room3.left_down = new cc.Vec2(down_y,2*sub_room_width+3);
+                room3.right_up = new cc.Vec2(up_y,3*sub_room_width+2);
+                room3.gate = [new cc.Vec2(gate_y,2*sub_room_width+4)];
                 room3.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room3);
 
@@ -267,7 +296,7 @@ const Room = cc.Class({
             else if(sub_rooms_rand <= 0.75)//two rooms
             {
                 var sub_room1_width = Math.floor(Math.random() * 7)+2;
-                var rest_width = RoomWidth - 3 - sub_room1_width;
+                var rest_width = this.room_width - 3 - sub_room1_width;
                 var room1 = new SubRoom;
                 var room2 = new SubRoom;
                 var r = Math.random();
@@ -286,19 +315,19 @@ const Room = cc.Class({
                     }
                 }
                 
-                room1.left_down = new cc.Vec2(1,down_y);
-                room1.right_up = new cc.Vec2(sub_room1_width,up_y);
+                room1.left_down = new cc.Vec2(down_y,1);
+                room1.right_up = new cc.Vec2(up_y,1);
                 var gate_pos1 = Math.floor(Math.random() * sub_room1_width) + 1;
-                room1.gate = [new cc.Vec2(gate_pos1,gate_y)];
+                room1.gate = [new cc.Vec2(gate_y,gate_pos1)];
                 room1.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room1);
                 
                 
-                room2.left_down = new cc.Vec2(sub_room1_width+2,down_y);
-                room2.right_up = new cc.Vec2(RoomWidth-2,up_y);
-                var sub = RoomWidth-2 - sub_room1_width-2;
+                room2.left_down = new cc.Vec2(down_y,sub_room1_width+2);
+                room2.right_up = new cc.Vec2(up_y,this.room_width-2);
+                var sub = this.room_width-2 - sub_room1_width-2;
                 var gate_pos2 = Math.floor(Math.random()*(sub))+sub_room1_width+2;
-                room2.gate = [new cc.Vec2(gate_pos2,gate_y)];
+                room2.gate = [new cc.Vec2(gate_y,gate_pos2)];
                 room2.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room2);
             }
@@ -315,9 +344,9 @@ const Room = cc.Class({
                 {
                     room1.virtual = 1;
                 }
-                room1.left_down = new cc.Vec2(1,down_y);
-                room1.right_up = new cc.Vec2(sub_room_width,up_y);
-                room1.gate = [new cc.Vec2(1,gate_y)];
+                room1.left_down = new cc.Vec2(down_y,1);
+                room1.right_up = new cc.Vec2(up_y,sub_room_width);
+                room1.gate = [new cc.Vec2(gate_y,1)];
                 room1.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room1);
 
@@ -326,9 +355,9 @@ const Room = cc.Class({
                 {
                     room2.virtual = 1;
                 }
-                room2.left_down = new cc.Vec2(sub_room_width+2,down_y);
-                room2.right_up = new cc.Vec2(2*sub_room_width+1,up_y);
-                room2.gate = [new cc.Vec2(sub_room_width+2,gate_y)];
+                room2.left_down = new cc.Vec2(down_y,sub_room_width+2);
+                room2.right_up = new cc.Vec2(up_y,2*sub_room_width+1);
+                room2.gate = [new cc.Vec2(gate_y,sub_room_width+2)];
                 room2.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room2);
 
@@ -337,9 +366,9 @@ const Room = cc.Class({
                 {
                     room3.virtual = 1;
                 }
-                room3.left_down = new cc.Vec2(2*sub_room_width+3,down_y);
-                room3.right_up = new cc.Vec2(3*sub_room_width+2,up_y);
-                room3.gate = [new cc.Vec2(2*sub_room_width+3,gate_y)];
+                room3.left_down = new cc.Vec2(down_y,2*sub_room_width+3);
+                room3.right_up = new cc.Vec2(up_y,3*sub_room_width+2);
+                room3.gate = [new cc.Vec2(gate_y,2*sub_room_width+3)];
                 room3.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room3);
 
@@ -348,9 +377,9 @@ const Room = cc.Class({
                 {
                     room4.virtual = 1;
                 }
-                room4.left_down = new cc.Vec2(3*sub_room_width+4,down_y);
-                room4.right_up = new cc.Vec2(4*sub_room_width+3,up_y);
-                room4.gate = [new cc.Vec2(3*sub_room_width+4,gate_y)];
+                room4.left_down = new cc.Vec2(down_y,3*sub_room_width+4);
+                room4.right_up = new cc.Vec2(up_y,4*sub_room_width+3);
+                room4.gate = [new cc.Vec2(gate_y,3*sub_room_width+4)];
                 room4.room_type = SubRoomType.single_room;
                 this.sub_rooms.push(room4);
 
@@ -366,11 +395,11 @@ const Room = cc.Class({
             var gate_x;
             if(is_right)
             {
-                right_x = RoomWidth-2;
+                right_x = this.room_width-2;
                 left_x = right_x- sub_room_width+1;
                 gate_x = left_x-1;
-                hall_room.left_down = new cc.Vec2(1,RoomHeight - 2);
-                hall_room.right_up = new cc.Vec2(left_x - 2,1);
+                hall_room.left_down = new cc.Vec2(this.room_height - 2,1);
+                hall_room.right_up = new cc.Vec2(1,left_x - 2);
 
             }
             else 
@@ -378,8 +407,8 @@ const Room = cc.Class({
                 left_x = 1;
                 right_x = left_x + sub_room_width-1;
                 gate_x = right_x+1;
-                hall_room.left_down = new cc.Vec2(right_x + 2,RoomHeight - 2);
-                hall_room.right_up = new cc.Vec2(RoomWidth - 2,1);
+                hall_room.left_down = new cc.Vec2(this.room_height - 2,right_x + 2);
+                hall_room.right_up = new cc.Vec2(1,this.room_width - 2);
             }
             hall_room.virtual = true;
             hall_room.room_type = SubRoomType.big_spare;
@@ -390,19 +419,19 @@ const Room = cc.Class({
             var room2 = new SubRoom;
 
 
-            room1.left_down = new cc.Vec2(left_x, sub_room_height);
-            room1.right_up = new cc.Vec2(right_x, 1);
+            room1.left_down = new cc.Vec2(sub_room_height,left_x);
+            room1.right_up = new cc.Vec2(1,right_x);
             var y_pos = Math.floor(Math.random() * sub_room_height)+1;
-            room1.gate = [new cc.Vec2(gate_x,y_pos)];
+            room1.gate = [new cc.Vec2(y_pos,gate_x)];
             room1.room_type = SubRoomType.single_room;
             this.sub_rooms.push(room1);
 
 
-            room2.left_down = new cc.Vec2(left_x, RoomHeight - 2);
-            room2.right_up = new cc.Vec2(right_x, sub_room_height + 2);
-            var sub = RoomHeight-2- sub_room_height-2+1;
+            room2.left_down = new cc.Vec2(this.room_height - 2,left_x);
+            room2.right_up = new cc.Vec2(sub_room_height + 2,right_x);
+            var sub = this.room_height-2- sub_room_height-2+1;
             var y_pos2 = Math.floor(Math.random()*sub)+sub_room_height+2;
-            room2.gate = [new cc.Vec2(gate_x,y_pos2)];
+            room2.gate = [new cc.Vec2(y_pos2,gate_x)];
             room2.room_type = SubRoomType.single_room;
             this.sub_rooms.push(room2);
         }
@@ -422,7 +451,7 @@ const Room = cc.Class({
         var up_y;
         var gate_y;
 
-        down_y = RoomHeight - 1 - 1;
+        down_y = this.room_height - 1 - 1;
         up_y = down_y - (sub_room_height - 1);
         gate_y = up_y - 1;
 
@@ -463,28 +492,28 @@ const Room = cc.Class({
             up_room3.virtual = 1;
         }
 
-        room1.left_down = new cc.Vec2(1, down_y);
-        room1.right_up = new cc.Vec2(sub_room_width, up_y);
+        room1.left_down = new cc.Vec2(down_y,1);
+        room1.right_up = new cc.Vec2(up_y,sub_room_width);
         this.sub_rooms.push(room1);
 
-        up_room1.left_down = new cc.Vec2(1, up_y - 2);
-        up_room1.right_up = new cc.Vec2(sub_room_width, 1);
+        up_room1.left_down = new cc.Vec2(up_y - 2,1);
+        up_room1.right_up = new cc.Vec2(1,sub_room_width);
         this.sub_rooms.push(up_room1);
 
-        room2.left_down = new cc.Vec2(sub_room_width + 2, down_y);
-        room2.right_up = new cc.Vec2(2 * sub_room_width + 1, up_y);
+        room2.left_down = new cc.Vec2(down_y,sub_room_width + 2);
+        room2.right_up = new cc.Vec2(up_y,2 * sub_room_width + 1);
         this.sub_rooms.push(room2);
 
-        up_room2.left_down = new cc.Vec2(sub_room_width + 2, up_y - 2);
-        up_room2.right_up = new cc.Vec2(2 * sub_room_width + 1, 1);
+        up_room2.left_down = new cc.Vec2(up_y - 2,sub_room_width + 2);
+        up_room2.right_up = new cc.Vec2(1,2 * sub_room_width + 1);
         this.sub_rooms.push(up_room2);
 
-        room3.left_down = new cc.Vec2(2 * sub_room_width + 3, down_y);
-        room3.right_up = new cc.Vec2(3 * sub_room_width + 2, up_y);
+        room3.left_down = new cc.Vec2(down_y,2 * sub_room_width + 3);
+        room3.right_up = new cc.Vec2(up_y,3 * sub_room_width + 2);
         this.sub_rooms.push(room3);
 
-        up_room3.left_down = new cc.Vec2(2 * sub_room_width + 3, up_y - 2);
-        up_room3.right_up = new cc.Vec2(3 * sub_room_width + 2, 1);
+        up_room3.left_down = new cc.Vec2(up_y - 2,2 * sub_room_width + 3);
+        up_room3.right_up = new cc.Vec2(1,3 * sub_room_width + 2);
         this.sub_rooms.push(up_room3);
 
         var up_gate_y = Math.floor(Math.random() * (up_y - 2 - 1 + 1)) + 1;
@@ -495,9 +524,9 @@ const Room = cc.Class({
             [0, 1, 0, 1, 0]
         ];
         var gate_pos = [
-            [0, new cc.Vec2(sub_room_width + 1, up_gate_y), 0, new cc.Vec2(2 * sub_room_width + 2, up_gate_y), 0],
-            [new cc.Vec2(2, gate_y), 0, new cc.Vec2(sub_room_width + 3, gate_y), 0, new cc.Vec2(2 * sub_room_width + 4, gate_y)],
-            [0, new cc.Vec2(sub_room_width + 1, down_gate_y), 0, new cc.Vec2(2 * sub_room_width + 2, down_gate_y), 0]
+            [0, new cc.Vec2(up_gate_y,sub_room_width + 1), 0, new cc.Vec2(up_gate_y,2 * sub_room_width + 2), 0],
+            [new cc.Vec2(gate_y,2), 0, new cc.Vec2(gate_y,sub_room_width + 3), 0, new cc.Vec2(gate_y,2 * sub_room_width + 4)],
+            [0, new cc.Vec2(down_gate_y,sub_room_width + 1), 0, new cc.Vec2(down_gate_y,2 * sub_room_width + 2 ), 0]
         ];
         var rooms = [
             [up_room1, 0, up_room2, 0, up_room3],
@@ -706,9 +735,11 @@ const Room = cc.Class({
         this.paths = null;
     
     },
-    is_wall:function(i,j)
+    is_wall:function(ij_pos)
     {
-        if(i < 0 || i > RoomHeight-1 || j < 0 || j > RoomWidth-1)
+        var i = ij_pos.x;
+        var j = ij_pos.y;
+        if(i < 0 || i > this.room_height-1 || j < 0 || j > this.room_width-1)
         {
             return 0;
         }
@@ -721,14 +752,16 @@ const Room = cc.Class({
             return 0;
         }
     },
-    draw_wall:function(i,j)
+    draw_wall:function(ij_pos)
     {
+        var i = ij_pos.x;
+        var j = ij_pos.y;
         var frame;
                     
-        var up = this.is_wall(i-1,j);
-        var down = this.is_wall(i+1,j);
-        var left = this.is_wall(i,j-1);
-        var right= this.is_wall(i,j+1);
+        var up = this.is_wall(new cc.Vec2(i-1,j));
+        var down = this.is_wall(new cc.Vec2(i+1,j));
+        var left = this.is_wall(new cc.Vec2(i,j-1));
+        var right= this.is_wall(new cc.Vec2(i,j+1));
 
         var middle_x = (!up && !down && left &&right);
         var middle_y =  (up && down && !left &&!right);
@@ -857,23 +890,11 @@ const Room = cc.Class({
         this.node.addChild(wall);
         this.wall_sprites[i][j] = wall;
     },
-    is_gate:function(i,j)
-    {
-        for(var i = 0 ; i < this.gates;i++)
-        {
-            if(this.gates[i].x == j && this.gates[i].y == i)
-            {
-                return true;
-            }
-        }
-        return false;
-    },
     is_in_front_of_gate:function(ij_pos)
     {
         var gates = this.get_valid_gates();
         for(var i = 0 ; i < gates.length;i++){
-            var ij_gate_pos = new cc.Vec2(gates[i].y,gates[i].x);
-            var counter = Math.abs(ij_pos.x - ij_gate_pos.x) + Math.abs(ij_pos.y - ij_gate_pos.y);
+            var counter = Math.abs(ij_pos.x - gates[i].x) + Math.abs(ij_pos.y - gates[i].y);
             if(counter <= 1){
                 return true;
             }
@@ -884,79 +905,81 @@ const Room = cc.Class({
     {
         if(this.up_gate != null)
         {
-            var pos = this.up_gate;
-            if(this.wall_marks[pos.y+1][pos.x] == 1)
+            var ij_pos = this.up_gate;
+            if(this.wall_marks[ij_pos.x+1][ij_pos.y] == 1)
             {
                 var rand = Math.random();
                 if(rand < 0.5)
                 {
-                    this.up_gate = new cc.Vec2(pos.x + 1,pos.y);
+                    this.up_gate = new cc.Vec2(ij_pos.x,ij_pos.y + 1);
                 }
                 else 
                 {
-                    this.up_gate = new cc.Vec2(pos.x - 1,pos.y);
+                    this.up_gate = new cc.Vec2(ij_pos.x,ij_pos.y - 1);
                 }
             }
-            pos = this.up_gate;
-            this.wall_marks[pos.y][pos.x] = 0;
+            ij_pos = this.up_gate;
+            this.wall_marks[ij_pos.x][ij_pos.y] = 0;
         }
         if(this.down_gate != null)
         {
-            var pos = this.down_gate;
-            if(this.wall_marks[pos.y-1][pos.x] == 1)
+            var ij_pos = this.down_gate;
+            if(this.wall_marks[ij_pos.x-1][ij_pos.y] == 1)
             {
                 var rand = Math.random();
                 if(rand < 0.5)
                 {
-                    this.down_gate = new cc.Vec2(pos.x + 1,pos.y);
+                    this.down_gate = new cc.Vec2(ij_pos.x,ij_pos.y + 1);
                 }
                 else 
                 {
-                    this.down_gate = new cc.Vec2(pos.x - 1,pos.y);
+                    this.down_gate = new cc.Vec2(ij_pos.x,ij_pos.y - 1);
                 }
             }
-            pos = this.down_gate;
-            this.wall_marks[pos.y][pos.x] = 0;
+            ij_pos = this.down_gate;
+            this.wall_marks[ij_pos.x][ij_pos.y] = 0;
         }
         if(this.left_gate != null)
         {
-            var pos = this.left_gate;
-            if(this.wall_marks[pos.y][pos.x+1] == 1)
+            var ij_pos = this.left_gate;
+            if(this.wall_marks[ij_pos.x][ij_pos.y+1] == 1)
             {
                 var rand = Math.random();
                 if(rand < 0.5)
                 {
-                    this.left_gate = new cc.Vec2(pos.x,pos.y+1);
+                    this.left_gate = new cc.Vec2(ij_pos.x + 1,ij_pos.y);
                 }
                 else 
                 {
-                    this.left_gate = new cc.Vec2(pos.x,pos.y-1);
+                    this.left_gate = new cc.Vec2(ij_pos.x - 1,ij_pos.y);
                 }
             }
-            pos = this.left_gate;
-            this.wall_marks[pos.y][pos.x] = 0;
+            ij_pos = this.left_gate;
+            this.wall_marks[ij_pos.x][ij_pos.y] = 0;
         }
         if(this.right_gate != null)
         {
-            var pos = this.right_gate;
-            if(this.wall_marks[pos.y][pos.x-1] == 1)
+            var ij_pos = this.right_gate;
+            if(this.wall_marks[ij_pos.x][ij_pos.y-1] == 1)
             {
                 var rand = Math.random();
                 if(rand < 0.5)
                 {
-                    this.right_gate = new cc.Vec2(pos.x,pos.y+1);
+                    this.right_gate = new cc.Vec2(ij_pos.x + 1,ij_pos.y);
                 }
                 else 
                 {
-                    this.right_gate = new cc.Vec2(pos.x,pos.y-1);
+                    this.right_gate = new cc.Vec2(ij_pos.x - 1,ij_pos.y);
                 }
             }
-            pos = this.right_gate;
-            this.wall_marks[pos.y][pos.x] = 0;
+            ij_pos = this.right_gate;
+            this.wall_marks[ij_pos.x][ij_pos.y] = 0;
         }
     },
-    draw_ground:function(i,j)
+    draw_ground:function(ij_pos)
     {
+        var i = ij_pos.x;
+        var j = ij_pos.y;
         var grounds = [this.tile_set.ground1,this.tile_set.ground2,this.tile_set.ground3];
         var rand_gnd = Math.floor(Math.random()*grounds.length);
         var frame = grounds[rand_gnd];
@@ -968,7 +991,7 @@ const Room = cc.Class({
         gnd.anchorY = 1;
         gnd.x = j*gnd.width;
         gnd.y = -i*gnd.height;
-        if(this.is_wall(i-1,j))
+        if(this.is_wall(new cc.Vec2(i-1,j)))
         {
             var shadow = new cc.Node();
             shadow.addComponent(cc.Sprite).spriteFrame = this.decoration_tile_set.up_shadow[1];
@@ -984,23 +1007,22 @@ const Room = cc.Class({
     },
     draw_room:function()
     {
-        
         //生成地砖
-        for(var i = 0 ; i < RoomHeight;i++)
+        for(var i = 0 ; i < this.room_height;i++)
         {
-            for(var j = 0;j < RoomWidth;j++)
+            for(var j = 0;j < this.room_width;j++)
             {
-                this.draw_ground(i,j);
+                this.draw_ground(new cc.Vec2(i,j));
             }
         }
         //生成墙
-        for(var i = 0;i < RoomHeight;i++)
+        for(var i = 0;i < this.room_height;i++)
         {
-            for(var j = 0;j<RoomWidth;j++)
+            for(var j = 0;j<this.room_width;j++)
             {
                 if(this.wall_marks[i][j] == 1)
                 {
-                    this.draw_wall(i,j);
+                    this.draw_wall(new cc.Vec2(i,j));
                 }
                 
             }
@@ -1010,9 +1032,9 @@ const Room = cc.Class({
     decorate_maze_room:function()
     {
         var i_start = 1;
-        var i_end = RoomHeight - 2;
+        var i_end = this.room_height - 2;
         var j_start = 1;
-        var j_end = RoomWidth - 2;
+        var j_end = this.room_width - 2;
         var decoration_num = 5;
         var blank = [];
         for(var i = i_start; i <= i_end; i++){
@@ -1039,10 +1061,10 @@ const Room = cc.Class({
     decorate_single_room:function(sub_room)
     {
         // var front_gate = this.get_pos_in_front_gate(sub_room);
-        var i_start = sub_room.right_up.y;
-        var i_end = sub_room.left_down.y;
-        var j_start = sub_room.left_down.x;
-        var j_end = sub_room.right_up.x;
+        var i_start = sub_room.right_up.x;
+        var i_end = sub_room.left_down.x;
+        var j_start = sub_room.left_down.y;
+        var j_end = sub_room.right_up.y;
         //gnd
         if(sub_room.virtual == 0)
         {
@@ -1059,8 +1081,8 @@ const Room = cc.Class({
             {
                 var gnd_frames = this.tile_set.small_room_gnd;
                 var rand_frame = gnd_frames[Math.floor(Math.random() * gnd_frames.length)];
-                var pos_i = sub_room.gate[i].y;
-                var pos_j = sub_room.gate[i].x;
+                var pos_i = sub_room.gate[i].x;
+                var pos_j = sub_room.gate[i].y;
                 var old_gnd = this.ground_sprites[pos_i][pos_j];
                 old_gnd.getComponent(cc.Sprite).spriteFrame = rand_frame;
             }
@@ -1102,10 +1124,10 @@ const Room = cc.Class({
     },
     decorate_path_room:function(sub_room)
     {
-        var i_start = sub_room.right_up.y;
-        var i_end = sub_room.left_down.y;
-        var j_start = sub_room.left_down.x;
-        var j_end = sub_room.right_up.x;
+        var i_start = sub_room.right_up.x;
+        var i_end = sub_room.left_down.x;
+        var j_start = sub_room.left_down.y;
+        var j_end = sub_room.right_up.y;
         if(sub_room.virtual == 0)
         {
             //装饰地面/地板
@@ -1123,8 +1145,8 @@ const Room = cc.Class({
                 {
                     var gnd_frames = this.tile_set.big_room_gnd;
                     var rand_frame = gnd_frames[Math.floor(Math.random() * gnd_frames.length)];
-                    var pos_i = sub_room.gate[i].y;
-                    var pos_j = sub_room.gate[i].x;
+                    var pos_i = sub_room.gate[i].x;
+                    var pos_j = sub_room.gate[i].y;
                     var old_gnd = this.ground_sprites[pos_i][pos_j];
                     old_gnd.getComponent(cc.Sprite).spriteFrame = rand_frame;
                 }
@@ -1144,7 +1166,7 @@ const Room = cc.Class({
                 bone.x = 0;
                 bone.y = 0;
 
-                var rand_i = Math.floor(Math.random() * (i_end- i_start + 1))+i_start;
+                var rand_i = Math.floor(Math.random() * (i_end- i_start + 1)) + i_start;
                 var rand_j = Math.floor(Math.random() * (j_end - j_start + 1)) + j_start;
                 this.ground_sprites[rand_i][rand_j].addChild(bone);
             }
@@ -1205,12 +1227,12 @@ const Room = cc.Class({
                 var gate = cc.instantiate(this.interactions.unlocked_door);
                 var x = sub_room.gate[i].x;
                 var y = sub_room.gate[i].y;
-                var abs_x = TileWidth * x;
-                var abs_y = - TileHeight * y;
+                var abs_x = this.tile_width * y;
+                var abs_y = - this.tile_width * x;
                 gate.x = abs_x;
                 gate.y = abs_y;
                 this.node.addChild(gate);
-                this.interaction_items[y][x] = gate;
+                this.interaction_items[x][y] = gate;
             }
         }
         // add decoration interactions 
@@ -1219,7 +1241,7 @@ const Room = cc.Class({
             pos = sub_room.random_pos_beside_wall();
         }
         var deco_inter = this.interactions.random_interaction();
-        deco_inter.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + 0.5 * TileHeight));
+        deco_inter.position = new cc.Vec2(pos.y * this.tile_width + 0.5 * this.tile_width, - (pos.x * this.tile_width + 0.5 * this.tile_width));
         this.interaction_items[pos.x][pos.y] = deco_inter;
         this.node.addChild(deco_inter);
         //add jar 
@@ -1228,7 +1250,7 @@ const Room = cc.Class({
             pos = sub_room.random_pos();
         }
         var jar = this.interactions.create_normal_jar();
-        jar.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileHeight + TileHeight));
+        jar.position = new cc.Vec2(pos.y * this.tile_width + 0.5 * this.tile_width, - (pos.x * this.tile_width + this.tile_width));
         jar.pos = pos;
         this.interaction_items[pos.x][pos.y] = jar;
         this.node.addChild(jar);
@@ -1256,12 +1278,12 @@ const Room = cc.Class({
             var y = room_doors[i].y;
             gate.anchorX = 0;
             gate.anchorY = 1;
-            var abs_x = TileWidth * x;
-            var abs_y = - TileHeight * y;
+            var abs_x = this.tile_width * y;
+            var abs_y = - this.tile_width * x;
             gate.x = abs_x;
             gate.y = abs_y;
             this.node.addChild(gate);
-            this.interaction_items[y][x] = gate;
+            this.interaction_items[x][y] = gate;
         }
     },
     add_actor_single_sub_rooms:function(sub_room)
@@ -1320,21 +1342,17 @@ const Room = cc.Class({
     },
     convertPos2IJ:function(pos)
     {
-        var j = Math.floor((pos.x + 10)/TileWidth);
-        var i = Math.floor((-pos.y - 10)/TileHeight);
+        var j = Math.floor((pos.x + 10)/this.tile_width);
+        var i = Math.floor((-pos.y - 10)/this.tile_width);
         return new cc.Vec2(i,j);
     },
     convertIJ2Pos:function(ij_pos)
     {
         var i = ij_pos.x;
         var j = ij_pos.y;
-        var x = j * TileWidth + 0.5 * TileWidth;
-        var y = -((i + 1 ) * TileHeight);
+        var x = j * this.tile_width + 0.5 * this.tile_width;
+        var y = -((i + 1 ) * this.tile_width);
         return new cc.Vec2(x,y);
-    },
-    convertDraw2IJ:function(pos)
-    {
-        return new cc.Vec2(pos.y,pos.x);
     },
     init_as_normal_room:function()
     {
@@ -1363,25 +1381,21 @@ const Room = cc.Class({
                 break;
             }
         }
-        var i_start = born_sub_room.right_up.y; 
-        var i_end = born_sub_room.left_down.y;
-        var j_start = born_sub_room.left_down.x;
-        var j_end = born_sub_room.right_up.x;
-        var rand_i = Math.floor(Math.random() *(i_end - i_start + 1)) + i_start;
-        var rand_j = Math.floor(Math.random() * (j_end - j_start + 1)) + j_start;
+        
         var down_stair = cc.instantiate(this.tile_set.down_stair);
-        down_stair.x = rand_j* TileWidth;
-        down_stair.y = - rand_i * TileHeight;
+        var random_ij_pos = born_sub_room.random_pos();
+        down_stair.x = random_ij_pos.y* this.tile_width;
+        down_stair.y = - random_ij_pos.x * this.tile_width;
         down_stair.name = "down_stair";
         this.node.addChild(down_stair);
-        this.interaction_items[rand_i][rand_j] = down_stair;
+        this.interaction_items[random_ij_pos.x][random_ij_pos.y] = down_stair;
         //
         this.add_interactions_to_all_sub_rooms();
         this.add_actors();
-        this.born_ij_pos = new cc.Vec2(rand_i,rand_j);
+        this.born_ij_pos = new cc.Vec2(random_ij_pos.x,random_ij_pos.y);
     },
     init_from_file:function(file_name,tile_set,decoration_tile_set,interactions){
-
+        // warning: exist bug
         this.tile_set = tile_set;
         this.decoration_tile_set = decoration_tile_set;
         this.interactions = interactions;
@@ -1413,9 +1427,9 @@ const Room = cc.Class({
         //init map sprites
         for(var k = 0 ; k < sprites.length;k++){
             var tem = [];
-            for(var i = 0 ; i < RoomHeight; i++){
+            for(var i = 0 ; i < this.room_height; i++){
                 tem[i] = [];
-                for(var j = 0 ; j < RoomWidth; j++){
+                for(var j = 0 ; j < this.room_width; j++){
                     var each_sprite_data = room_data[sprites[k]][i][j];
                     if(!each_sprite_data)
                     {
@@ -1439,9 +1453,9 @@ const Room = cc.Class({
         //init interactions 
         var interaction_data = room_data["interaction_items"];
         var interaction_sprites = [];
-        for(var i = 0 ; i < RoomHeight ; i++){
+        for(var i = 0 ; i < this.room_height ; i++){
             interaction_sprites[i] = [];
-            for(var j = 0 ; j < RoomWidth;j++){
+            for(var j = 0 ; j < this.room_width;j++){
                 var each_data = interaction_data[i][j];
                 if(!each_data){continue;}
                 cc.log(each_data);
@@ -1489,22 +1503,22 @@ const Room = cc.Class({
     init:function(up,down,left,right,tile_set,decoration_tile_set,interactions,actor_set,born)
     {
         
-        var rand_i_left = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
-        var rand_i_right = Math.floor(Math.random() * (RoomHeight - 2)) + 1;
-        var rand_j_up = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
-        var rand_j_down = Math.floor(Math.random() * (RoomWidth - 2)) + 1;
+        var rand_i_left = Math.floor(Math.random() * (this.room_height - 2)) + 1;
+        var rand_i_right = Math.floor(Math.random() * (this.room_height - 2)) + 1;
+        var rand_j_up = Math.floor(Math.random() * (this.room_width - 2)) + 1;
+        var rand_j_down = Math.floor(Math.random() * (this.room_width - 2)) + 1;
 
         if (up) {
-            this.up_gate = new cc.Vec2(rand_j_up, 0);
+            this.up_gate = new cc.Vec2(0,rand_j_up);
         }
         if (down) {
-            this.down_gate = new cc.Vec2(rand_j_down, RoomHeight - 1);
+            this.down_gate = new cc.Vec2(this.room_height - 1,rand_j_down);
         }
         if (left) {
-            this.left_gate = new cc.Vec2(0, rand_i_left);
+            this.left_gate = new cc.Vec2(rand_i_left,0);
         }
         if (right) {
-            this.right_gate = new cc.Vec2(RoomWidth - 1, rand_i_right);
+            this.right_gate = new cc.Vec2(rand_i_right,this.room_width - 1);
         }
 
         this.tile_set = tile_set;

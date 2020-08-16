@@ -303,7 +303,7 @@ const GameWorld = cc.Class({
         else{
             gate = this.current_room.getComponent("room").left_gate;
         }
-        var hero_pos = this.current_room.getComponent("room").convertIJ2Pos(new cc.Vec2(gate.y,gate.x));
+        var hero_pos = this.current_room.getComponent("room").convertIJ2Pos(new cc.Vec2(gate.x,gate.y));
         this.hero.x = hero_pos.x;
         this.hero.y = hero_pos.y;
         this.hero.removeFromParent(false);
