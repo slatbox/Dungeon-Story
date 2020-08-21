@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-06 15:34:59
+ * @LastEditTime: 2020-08-21 10:15:30
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\items\instant_items\normal_key.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -32,7 +40,7 @@ cc.Class({
             hero_cmp.set_value("normal_keys",hero_cmp.normal_keys + 1);
             this.node.runAction(seq);
             cc.audioEngine.playEffect(this.sound_effect,false);
-            this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = null;
+            this.node.parent.getComponent("room").interactions[this.node.pos.x][this.node.pos.y] = null;
         };
         var seq = cc.sequence(
             cc.delayTime(hero.getComponent("hero").moving_time * 0.5),

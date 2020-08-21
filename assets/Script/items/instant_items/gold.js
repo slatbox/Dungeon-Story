@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-06 15:10:38
+ * @LastEditTime: 2020-08-21 10:15:10
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\items\instant_items\gold.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -41,7 +49,7 @@ cc.Class({
             hero_cmp.set_value("gold",hero_cmp.gold + this.current_price);
             this.node.runAction(seq);
             cc.audioEngine.playEffect(this.sound_effect,false);
-            this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = null;
+            this.node.parent.getComponent("room").interactions[this.node.pos.x][this.node.pos.y] = null;
         };
         var seq = cc.sequence(
             cc.delayTime(hero.getComponent("hero").moving_time * 0.5),

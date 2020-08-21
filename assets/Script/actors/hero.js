@@ -1,9 +1,19 @@
-// Learn cc.Class:
-//  - https://docs.cocos.com/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
+/*
+ * @Author: Jeffrey.Swen
+ * @Date: 2020-07-21 10:57:21
+ * @LastEditTime: 2020-08-20 15:08:57
+ * @LastEditors: Please set LastEditors
+ * 
+ * @Description: specific class for hero
+ * 
+ * @Attations:
+ * 
+ * 1) if you want to change hero's some attibute,do use the "set_value" method,which can update
+ * the hero message board. 
+ * 
+ * @FilePath: \Dungeon-Story\assets\Script\actors\hero.js
+ */
+
 const TileWith = 24 * 3;
 const TileHeight = 24 * 3;
 

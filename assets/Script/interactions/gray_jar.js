@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-07 10:39:00
+ * @LastEditTime: 2020-08-21 10:14:00
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\interactions\gray_jar.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -49,7 +57,7 @@ cc.Class({
                 item.x = this.node.x;
                 item.y = this.node.y + 0.5 * TileWidth;
                 item.pos = this.node.pos;
-                this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = item;
+                this.node.parent.getComponent("room").interactions[this.node.pos.x][this.node.pos.y] = item;
                 this.node.parent.addChild(item);
                 this.node.runAction(seq);
                 
@@ -70,7 +78,7 @@ cc.Class({
             item.x = this.node.x;
             item.y = this.node.y + 0.5 * TileWidth;
             item.pos = this.node.pos;
-            this.node.parent.getComponent("room").interaction_items[this.node.pos.x][this.node.pos.y] = item;
+            this.node.parent.getComponent("room").interactions[this.node.pos.x][this.node.pos.y] = item;
             this.node.parent.addChild(item);
             this.node.runAction(cc.removeSelf());
         }

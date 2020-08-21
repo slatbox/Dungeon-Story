@@ -1,3 +1,11 @@
+/*
+ * @Author: Jeffrey.Sewen
+ * @Date: 2020-07-10 08:10:43
+ * @LastEditTime: 2020-08-20 15:22:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\res\interaction_manager.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -10,6 +18,7 @@ const InteractionManager = cc.Class({
 
     properties: {
         unlocked_door:cc.Prefab,
+        locked_door:cc.Prefab,
         room_door:cc.Prefab,
         actor_statue:{
             default:[],

@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+
+
 const MainHeroStage = require("../GUI/main/main_hero_stage");
 
 const SubRoom = cc.Class({
@@ -15,36 +17,6 @@ const SubRoom = cc.Class({
         gate:[],
         room_type:0
     },
-    // // get_pos_in_front_gate:function(test_gate)
-    // // {
-    // //     if(test_gate.x  == this.left_down.x - 1)//left wall
-    // //     {
-    // //         return new cc.Vec2(test_gate.x+1,test_gate.y);
-    // //     }
-    // //     else if(test_gate.x == this.right_up.x+1)//right wall
-    // //     {
-    // //         return new cc.Vec2(test_gate.x-1,test_gate.y);
-    // //     }
-    // //     else if(test_gate.y == this.left_down.y - 1) //up wall
-    // //     {
-    // //         return new cc.Vec2(test_gate.x,test_gate.y+1);
-    // //     }
-    // //     else//(gate.y == sub_room.right_up.y)//right wall
-    // //     {
-    // //         return new cc.Vec2(test_gate.x,test_gate.y-1);
-    // //     }
-    // // },
-    // is_in_list:function(pos,List)
-    // {
-    //     for(var i = 0 ; i < List.length;i++)
-    //     {
-    //         if(pos.x == List[i].x && pos.y == List[i].y){
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // },
-    
     is_in_front_of_gate:function(ij_pos)
     {
         //pos is a ij_pos
@@ -77,7 +49,41 @@ const SubRoom = cc.Class({
         var rand_i = Math.floor(Math.random() * (i_end - i_start + 1)) + i_start;
         var rand_j = Math.floor(Math.random() * (j_end - j_start + 1)) + j_start;
         return new cc.Vec2(rand_i,rand_j);
-    }, 
+    },
+    is_gurading_pos:function(ij_pos)
+    {
+        for(var i = 0 ; i < this.gate.length;i++){
+            if(Math.abs(ij_pos.x - this.gate[i].x) + Math.abs(ij_pos.y - this.gate[i].y) <= 1){
+                return true;
+            }
+        }
+        return false;
+    },
+    random_gurading_pos_rate:function(rate)
+    {
+        if(Math.random() < rate){
+            return this.random_gurading_pos();
+        }
+        else{
+            return this.random_pos();
+        }
+    },
+    random_gurading_pos:function()
+    {
+        var i_start = this.right_up.x;
+        var i_end = this.left_down.x;
+        var j_start = this.left_down.y;
+        var j_end = this.right_up.y;
+        var valid_pos = [];
+        for(var i = i_start;i <= i_end;i++){
+            for(var j = j_start;j <= j_end;j++){
+                if(this.is_gurading_pos(new cc.Vec2(i,j))){
+                    valid_pos.push(new cc.Vec2(i,j));
+                }
+            }
+        }
+        return valid_pos[Math.floor(Math.random() * valid_pos.length)];
+    },
     random_pos_beside_wall:function()
     {
         //return ij_pos

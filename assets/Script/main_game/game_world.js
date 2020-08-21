@@ -10,9 +10,11 @@ const TileManager = require("tile_manager");
 const Set = require("Set");
 const DecorationTileManager = require("decoration_tile_manager");
 const InteractionManager = require("interaction_manager");
-const OccupationPrefabManager = require("occupation_prefab_manager");
 const ActorPrefabManager = require("actor_prefab_manager");
+const OccupationPrefabManager = require("occupation_prefab_manager");
 const DataManager = require("DataManager");
+const ObjectManager = require("object_manager");
+
 const GameWorld = cc.Class({
     extends: cc.Component,
 
@@ -25,17 +27,9 @@ const GameWorld = cc.Class({
             default:null,
             type:DecorationTileManager
         },
-        interactions:{
-            default:null,
-            type:InteractionManager
-        },
-        occpation_set:{
-            default:null,
-            type:OccupationPrefabManager
-        },
-        actor_set:{
-            default:null,
-            type:ActorPrefabManager
+        object_manager:{
+            default: null,
+            type:ObjectManager
         },
         game_BGM:cc.AudioClip
 
@@ -199,11 +193,13 @@ const GameWorld = cc.Class({
                 var down = this.is_room(2*i + 1, 2*j);
                 var left = this.is_room(2*i, 2*j - 1);
                 var right = this.is_room(2*i, 2*j + 1);
+
                 each_room.addComponent(Room).init(
                     up, down, left, right,
                     this.tile_set, this.decoration_tile_set, 
-                    this.interactions,this.actor_set,
+                    this.object_manager,
                     born);
+
                 each_room.x = 0;
                 each_room.y = 0;
                 this.rooms[i][j] = each_room;
@@ -217,19 +213,6 @@ const GameWorld = cc.Class({
 
        
 
-    },
-    init_hero:function()
-    {
-        var hero_occpation = DataManager.read_obj("occupation").occupation;
-        var hero = cc.instantiate(this.occpation_set[hero_occpation]);
-        var room = this.current_room.getComponent("room");
-        var born_ij_pos = room.born_ij_pos;
-        var real_pos = room.convertIJ2Pos(born_ij_pos);
-        hero.x = real_pos.x;
-        hero.y = real_pos.y;
-        hero.getComponent("hero").current_pos = real_pos.clone();
-        this.current_room.addChild(hero);
-        this.hero = hero;
     },
     deal_with_touch:function(event_pos)
     {
@@ -314,7 +297,7 @@ const GameWorld = cc.Class({
     onLoad:function()
     {
         this.init_rooms();
-        this.init_hero();
+        this.object_manager.init_hero(this)
         cc.audioEngine.playMusic(this.game_BGM);
     },
 

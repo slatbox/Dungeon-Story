@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "blood",
+    "_name": "locked_door",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -39,20 +39,20 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 44,
-      "height": 38
+      "width": 72,
+      "height": 72
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
+      "x": 0,
+      "y": 1
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        480.108,
-        344,
+        639.65,
+        342.134,
         0,
         0,
         0,
@@ -92,7 +92,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "18c6dea7-53d0-49fc-bf3f-4866911156c4"
+      "__uuid__": "4db6a5f5-865b-4eff-8d16-dfe9c28df682"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -109,17 +109,24 @@
     "_id": ""
   },
   {
-    "__type__": "8f9efNXIbNGar3KTwK6eTQj",
+    "__type__": "83dcfO8t/9NSIqXs6iZ9vFo",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "value": 20,
-    "sound_effect": {
-      "__uuid__": "139c248e-5f87-49c8-86e8-4601c28d7846"
+    "open_frame": {
+      "__uuid__": "95e8d747-022e-4474-a228-faba7d6648c0"
     },
+    "sounds": [
+      {
+        "__uuid__": "ac41efe9-71cb-4435-9c9a-d91f5274cf18"
+      },
+      {
+        "__uuid__": "0a615734-9e90-4abd-8838-169b1c8f02b1"
+      }
+    ],
     "_id": ""
   },
   {
@@ -128,9 +135,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "92c3be67-7792-479d-a84d-987d9620d3d4"
+      "__uuid__": "24ec951e-adc4-4c4b-b8a4-de2231abbd43"
     },
-    "fileId": "6deHgGc01HRYLGNJfu4sIJ",
+    "fileId": "c7x4ff3/lOE7/SgM96hBZv",
     "sync": false
   }
 ]

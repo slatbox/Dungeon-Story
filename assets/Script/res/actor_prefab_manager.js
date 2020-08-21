@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-07-03 13:00:01
+ * @LastEditTime: 2020-08-21 10:06:19
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\res\actor_prefab_manager.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -21,15 +29,14 @@ const ActorPrefabManager = cc.Class({
             default:[],
             type:cc.Prefab
         },
-        special:{
+        level4:{
             default:[],
             type:cc.Prefab
         }
     },
     random_foe:function(level){
-        var rand = Math.floor(Math.random() * this.level1.length);
-        var label = "level" + String(level);
-        var foe = cc.instantiate(this[label][rand]);
+        var rand = Math.floor(Math.random() * this["level"+level].length);
+        var foe = cc.instantiate(this["level" + level][rand]);
         foe.anchorX = 0.5;
         foe.anchorY = 0;
         return foe;
