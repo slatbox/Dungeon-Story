@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Swen
 
  * @Date: 2020-08-18 15:56:37
- * @LastEditTime: 2020-08-21 11:12:20
+ * @LastEditTime: 2020-08-21 15:02:26
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to allocate items ,interactions and actors in a room 
@@ -19,12 +19,6 @@ const ActorPrefabManager = require("actor_prefab_manager");
 const OccupationPrefabManager = require("occupation_prefab_manager");
 const DataManager = require("DataManager");
 const types = require("types");
-
-const RoomType = types.RoomType;
-
-const SplitType =types.SplitType;
-
-const FillType = types.FillType;
 
 const SubRoomType = types.SubRoomType;
 const TileWidth = types.TileWidth;

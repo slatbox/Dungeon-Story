@@ -6,7 +6,6 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 const ActorPrefabManager = require("actor_prefab_manager");
 const DataManager = require("DataManager");
-const OccupationPrefabManager = require("occupation_prefab_manager")
 cc.Class({
     extends: cc.Component,
 
@@ -20,7 +19,7 @@ cc.Class({
         background_music: cc.AudioClip,
         actor_prefab_manager:{
             default:null,
-            type: OccupationPrefabManager
+            type: ActorPrefabManager
         },
         hero_stage:{
             default:null,
@@ -31,8 +30,8 @@ cc.Class({
     start_background:function()
     {
         //启动背景元素
-        var title = this.node.getChildByName("title");
-        var note = this.node.getChildByName("note");
+        var title = cc.find("Canvas/game scene/title");
+        var note = cc.find("Canvas/game scene/note");
         title.active = true;
         note.active = true;
         this.background_pic_1.node.active = true;
@@ -52,7 +51,7 @@ cc.Class({
         //设置触摸监听：
         this.node.on(cc.Node.EventType.TOUCH_END,function(event)
         {
-            var note = this.node.getChildByName("note");
+            var note = cc.find("Canvas/game scene/note")
             var action = cc.sequence(
                 cc.fadeOut(1),
                 cc.destroySelf()
@@ -65,16 +64,18 @@ cc.Class({
     start_show_actors:function()
     {
         var view_size = cc.view.getVisibleSize();
-        var fighter = cc.instantiate(this.actor_prefab_manager.fighter);
-        var red_demon = cc.instantiate(this.actor_prefab_manager.red_demon);
+        var fighter = cc.instantiate(this.actor_prefab_manager.level1[0]);
+        var red_demon = cc.instantiate(this.actor_prefab_manager.level1[1]);
 
         fighter.x = view_size.width / 2+fighter.width;
         fighter.y = this.actors_show_y;
 
         red_demon.x = view_size.width / 2+fighter.width;
         red_demon.y = this.actors_show_y;
-        this.node.addChild(fighter);
-        this.node.addChild(red_demon);
+        var game_scene = cc.find("Canvas/game scene");
+
+        game_scene.addChild(fighter);
+        game_scene.addChild(red_demon);
 
         var show_background = cc.callFunc(function (target)
         {
@@ -107,15 +108,7 @@ cc.Class({
         fighter.runAction(seq);
         this.showing_actor = red_demon;
         //加载随机显示列表
-        var pref = this.actor_prefab_manager;
-        this.show_list = [
-            pref.robber,
-            pref.ranger,
-            pref.green_slime,
-            pref.purple_slime,
-            pref.black_bat,
-            pref.red_bat
-        ]
+        this.show_list = this.actor_prefab_manager.level1
     },
    
     roll_background:function(dt)
@@ -160,7 +153,8 @@ cc.Class({
             var next_creatrure = cc.instantiate(this.show_list[rand]);
             next_creatrure.x = cc.view.getVisibleSize().width/2+next_creatrure.width;
             next_creatrure.y = this.actors_show_y;
-            this.node.addChild(next_creatrure);
+            var game_scene = cc.find("Canvas/game scene");
+            game_scene.addChild(next_creatrure);
             this.showing_actor = next_creatrure;
             var mov = cc.moveTo(this.actor_moving_time*2,-cc.view.getVisibleSize().width/2 - next_creatrure.width-10,this.actors_show_y);
             next_creatrure.runAction(mov);

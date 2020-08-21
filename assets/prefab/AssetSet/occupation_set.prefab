@@ -90,6 +90,9 @@
     "ranger": {
       "__uuid__": "2f4719bd-8574-4c50-8f1b-cc6a0bd16910"
     },
+    "wizard": {
+      "__uuid__": "2771ce3d-d656-4613-bc50-cdaefb6a52d0"
+    },
     "_id": ""
   },
   {
@@ -98,7 +101,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "cad69309-075f-4ce6-91a4-c9b462f62c9d"
     },
     "fileId": "65f79CeAdIZobIANVMyIDv",
     "sync": false

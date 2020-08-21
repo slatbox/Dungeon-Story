@@ -157,6 +157,48 @@
       "__id__": 1
     },
     "_enabled": true,
+    "current_pos": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "moving_time": 0.5,
+    "jump_height": 10,
+    "foot_setp_sound_ef": [
+      {
+        "__uuid__": "1fdb8e7f-eff1-4b42-823f-029843fe597d"
+      },
+      {
+        "__uuid__": "66c8f132-c7e4-44fc-82a6-a79776dbd225"
+      },
+      {
+        "__uuid__": "b2ec019c-7708-40e8-9560-067994972b13"
+      },
+      {
+        "__uuid__": "966080d2-a2ec-480c-9b04-4dac79bad44a"
+      },
+      {
+        "__uuid__": "b88dfa63-bc86-49e9-bf37-4e56a7bb9048"
+      },
+      {
+        "__uuid__": "04bc7a3c-0741-4b0a-9436-a3669a598f19"
+      },
+      {
+        "__uuid__": "35d2fa6a-771b-496b-bef8-f4f30a97fbbd"
+      },
+      {
+        "__uuid__": "fa316930-f7fc-4536-9b41-32452783bab3"
+      },
+      {
+        "__uuid__": "e0e8427f-e6c4-49ae-91bc-9dcfe5915be7"
+      },
+      {
+        "__uuid__": "7878d0ab-6ccd-4227-a352-9a626c736366"
+      }
+    ],
+    "current_hp": 0,
+    "normal_keys": 0,
+    "gold": 0,
     "_id": ""
   },
   {

@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ranger",
+    "_name": "wizard",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -45,7 +45,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 72,
+      "width": 68,
       "height": 70
     },
     "_anchorPoint": {
@@ -57,8 +57,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        667.793,
-        239.87,
+        449,
+        303,
         0,
         0,
         0,
@@ -98,7 +98,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "b65e4a46-8303-4e0d-9623-4eb2266b0515"
+      "__uuid__": "2902ec05-e3f8-475a-ad6f-6a98cab97a98"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -115,6 +115,22 @@
     "_id": ""
   },
   {
+    "__type__": "73fc2YIZN5Mhrl6cD6ctAO0",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "HP": 5,
+    "AT": 2,
+    "DF": 2,
+    "SP": 6,
+    "LK": 6,
+    "MG": 7,
+    "_id": ""
+  },
+  {
     "__type__": "cc.Animation",
     "_name": "",
     "_objFlags": 0,
@@ -123,33 +139,14 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "9f1e16f1-f621-4146-92dc-15643fe8dc2b"
+      "__uuid__": "66cf3777-ecb3-4c7c-bad2-c5f1a2b29d71"
     },
     "_clips": [
       {
-        "__uuid__": "9f1e16f1-f621-4146-92dc-15643fe8dc2b"
-      },
-      {
-        "__uuid__": "ec4a7b1f-13ba-451f-9f61-4953138acedd"
+        "__uuid__": "66cf3777-ecb3-4c7c-bad2-c5f1a2b29d71"
       }
     ],
-    "playOnLoad": false,
-    "_id": ""
-  },
-  {
-    "__type__": "73fc2YIZN5Mhrl6cD6ctAO0",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "HP": 7,
-    "AT": 4,
-    "DF": 4,
-    "SP": 8,
-    "LK": 8,
-    "MG": 5,
+    "playOnLoad": true,
     "_id": ""
   },
   {
@@ -210,9 +207,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "2f4719bd-8574-4c50-8f1b-cc6a0bd16910"
+      "__id__": 0
     },
-    "fileId": "40K8LcnYRE5K5M3EJpKKVG",
+    "fileId": "behVhLnEhAOboGy5+X1mAq",
     "sync": false
   }
 ]

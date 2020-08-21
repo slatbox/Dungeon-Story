@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "wizard",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.0166666666666666,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "2902ec05-e3f8-475a-ad6f-6a98cab97a98"
+            }
+          },
+          {
+            "frame": 0.5166666666666667,
+            "value": {
+              "__uuid__": "a06161d0-5b38-4854-a5b8-f5d7034aed6a"
+            }
+          },
+          {
+            "frame": 1,
+            "value": {
+              "__uuid__": "2902ec05-e3f8-475a-ad6f-6a98cab97a98"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

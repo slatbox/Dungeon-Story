@@ -49,9 +49,9 @@ const HeroStage = cc.Class({
         this.name_label.string = this.middle.name;
         this.description.set_description(this.middle);
 
-        cc.director.preloadScene("main_game", function () {
-            cc.log("preload main_game");
-        });
+        // cc.director.preloadScene("main_game", function () {
+        //     cc.log("preload main_game");
+        // });
     },
     next_occupation:function()
     {
@@ -91,6 +91,10 @@ const HeroStage = cc.Class({
         this.name_label.string = this.middle.name;
         this.description.set_description(this.middle);
 
+    },
+    back_to_main_menu:function()
+    {
+        this.node.parent.active = false;
     },
     pre_occupation:function()
     {
