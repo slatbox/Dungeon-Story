@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-03 17:00:41
- * @LastEditTime: 2020-08-21 10:23:52
+ * @LastEditTime: 2020-08-22 15:10:09
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to create a room object. One room is created in the sequence:
@@ -25,7 +25,8 @@
  * 
  * this.ground_sprites
  * this.wall_sprites
- * this.touchable_sprites 
+ * this.interactions
+ * this.actors
  * 
  * 3: Beside layer arraies, there is a wall_mark array used to mark that if a position 
  * in some ij_pos is occupied. 
@@ -1187,6 +1188,21 @@ const Room = cc.Class({
             return true;
         }
         return false;
+    },
+    is_full:function(sub_room)
+    {
+        var i_start = sub_room.right_up.x;
+        var i_end = sub_room.left_down.x;
+        var j_start = sub_room.left_down.y;
+        var j_end = sub_room.right_up.y;
+        for(var i = i_start;i <= i_end;i++){
+            for(var j = j_start;j <= j_end;j++){
+                if(!this.interactions[i][j] && !this.actors[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
     },
     move_to:function(direction,hero)
     {

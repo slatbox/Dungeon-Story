@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Swen
 
  * @Date: 2020-08-18 15:56:37
- * @LastEditTime: 2020-08-21 15:02:26
+ * @LastEditTime: 2020-08-22 15:23:39
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to allocate items ,interactions and actors in a room 
@@ -94,6 +94,7 @@ const ObjectManager = cc.Class({
             return;
         }
         for(var i = 0; i < sub_room.gate.length;i++){
+            
             var door;
             if (type == 'normal')
                 door = cc.instantiate(this.interactions_manager.unlocked_door);
@@ -136,6 +137,8 @@ const ObjectManager = cc.Class({
     },
     add_decoration_interactions:function(sub_room,room)
     {
+        if(room.is_full(sub_room))
+            return;
         var pos = sub_room.random_pos_beside_wall();
         while(room.is_occupied(pos) || room.is_in_front_of_gate(pos)){
             pos = sub_room.random_pos_beside_wall();
@@ -147,6 +150,7 @@ const ObjectManager = cc.Class({
     },
     add_items_to_sub_room:function(sub_room,type,room)
     {
+        
         if(type == "null")return;
         var num_of_jar = 0;
         if(type == 'jar')
@@ -156,6 +160,8 @@ const ObjectManager = cc.Class({
         else if(type == 'jar_3')
             num_of_jar = 3;
         while(num_of_jar--){
+            if(room.is_full(sub_room))
+                break;
             var pos = sub_room.random_pos();
             while (room.is_occupied(pos)) {
                 pos = sub_room.random_pos();
@@ -189,9 +195,9 @@ const ObjectManager = cc.Class({
     allocate_objects_to_sub_room:function(sub_room,pattern,room)
     {
         this.add_door_to_sub_room(sub_room,pattern[0],room);
-        this.add_decoration_interactions(sub_room,room);
-        this.add_items_to_sub_room(sub_room,pattern[2],room);
         this.add_foe_to_sub_room(sub_room,pattern[1],room);
+        this.add_items_to_sub_room(sub_room,pattern[2],room);
+        this.add_decoration_interactions(sub_room,room);
     },
     allocate_objects:function(room)
     {
@@ -211,7 +217,7 @@ const ObjectManager = cc.Class({
     },
     random_single_room_pattern:function()
     {
-        var middle_patterns = this.patterns.path_middle;
+        var middle_patterns = this.patterns.single_middle;
         var high_patterns = this.patterns.high;
         var special_patterns = this.patterns.special;
         var rand = Math.random();
