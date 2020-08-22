@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-07-12 17:31:02
+ * @LastEditTime: 2020-08-22 14:51:30
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\GUI\start_menu\ability_row.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -10,8 +18,13 @@ const AbilityRow = cc.Class({
 
     properties: {
         bar_frame:cc.SpriteFrame,
-        level: 0,
+        label_object:cc.Label,
+        num_label:cc.Label,
+        label:"HP",
+        max: 10,
         bar_gap:0,
+        color:cc.Color,
+        show_max:true,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -20,48 +33,39 @@ const AbilityRow = cc.Class({
 
     set_level:function(level)
     {
-        this.level = level;
-        var max_level = 6;
-        for(var i = 0; i < max_level;i++)
-        {
-            if(i < this.level)
-            {
-                this.bars[i].active = 1;
-            }
-            else 
-            {
-                this.bars[i].active = 0;
-            }
-        }
+       var percent = level/this.max;
+       this.bar.width = this.max_width * percent;
+       this.bar.height = 65.54;
+       var to_show = String(level);
+       if(this.show_max)
+        to_show += "/" + String(this.max);
+       this.num_label.string = to_show;
     },
 
     onLoad:function()
     {
-        var icon = this.node.getChildByName("icon");
-        var height = icon.height;
-        var width = icon.width;
-        var max_level = 10;
-        this.bars = [];
-        var start_color = cc.Color.BLUE;
-        var end_color = cc.Color.RED;
-        for(var i = 0 ; i < max_level;i++)
-        {
-            var bar = new cc.Node();
-            bar.addComponent(cc.Sprite).spriteFrame = this.bar_frame;
-            bar.anchorX = 0.5;
-            bar.anchorY = 0.5;
-            bar.x = width + this.bar_gap * (i+1);
-            bar.y = - height/2;
-
-            r = start_color.r + i/10*end_color.r;
-            g = start_color.g + i/10*end_color.g;
-            b = start_color.b + i/10*end_color.b;
-            bar.color = new cc.Color(r,g,b);
-            bar.active = false;
-            cc.log(bar.color);
-            this.node.addChild(bar);
-            this.bars.push(bar);
-        }
+        this.label_object.string = this.label;
+        var label = this.node.getChildByName("Label");
+        var bg = this.node.getChildByName("5bk");
+        var bar_layer = this.node.getChildByName("bar_layer");
+        var real_bg_width = bg.scaleX * bg.width;
+        this.max_width = real_bg_width;
+        var width = label.width;
+        var bar = new cc.Node();
+        bar.addComponent(cc.Sprite).spriteFrame = this.bar_frame;
+        bar.anchorX = 0;
+        bar.anchorY = 0.5;
+        bar.x = label.x + width/2;
+        bar.y = label.y;
+        bar.color = this.color;
+        this.bar = bar;
+        bar_layer.addChild(bar);
+        
+    },
+    start:function()
+    {
+        var ability_label = this.node.getChildByName("Label").getComponent(cc.Button);
+        ability_label.normalColor = this.color;
     },
     // update (dt) {},
 });
