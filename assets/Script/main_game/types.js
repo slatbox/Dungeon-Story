@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-18 16:29:39
- * @LastEditTime: 2020-08-20 15:37:06
+ * @LastEditTime: 2020-08-22 16:46:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\room_types.js
@@ -36,11 +36,20 @@ const SubRoomType = cc.Enum({
     single_room:3
 })
 const TileWidth = 72;
-
+const ToolTypes = cc.Enum({
+    arm_main:0,
+    arm_asis:1,
+    tool:2,
+    hp:3,
+    df:4,
+    lk:5,
+    sp:6
+});
 module.exports = {
     RoomType,
     SplitType,
     FillType,
     SubRoomType,
-    TileWidth
+    TileWidth,
+    ToolTypes
 }

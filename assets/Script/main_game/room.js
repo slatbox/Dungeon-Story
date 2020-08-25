@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-03 17:00:41
- * @LastEditTime: 2020-08-22 15:10:09
+ * @LastEditTime: 2020-08-25 17:39:50
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to create a room object. One room is created in the sequence:
@@ -1228,7 +1228,16 @@ const Room = cc.Class({
         }
         else if(this.interactions[i][j] != null)
         {
-            this.interactions[i][j].getComponent(this.interactions[i][j].name).act(hero,direction);
+            var valid_comp = this.interactions[i][j].getComponent("tool");
+            if(valid_comp){
+                valid_comp.ij_pos = new cc.Vec2(i,j);
+                valid_comp.act(hero,direction);
+            }
+            else{
+                valid_comp = this.interactions[i][j].getComponent(this.interactions[i][j].name);
+                valid_comp.act(hero,direction);
+            }
+            
         }
         else // empty
         {

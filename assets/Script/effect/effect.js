@@ -9,6 +9,13 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        arm_main_type_limit:1,
+        arm_asis_type_limit:1,
+        tool_type_limit:2,
+        hp_type_limit:1,
+        df_type_limit:1,
+        lk_type_limit:1,
+        sp_type_limit:1,
         
     },
 
@@ -18,7 +25,7 @@ cc.Class({
 
     onLoad:function()
     {
-        
+        this.tools = [];
     }
 
     // update (dt) {},

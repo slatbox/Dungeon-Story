@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-21 10:57:21
- * @LastEditTime: 2020-08-20 15:08:57
+ * @LastEditTime: 2020-08-25 17:21:55
  * @LastEditors: Please set LastEditors
  * 
  * @Description: specific class for hero
@@ -87,6 +87,7 @@ cc.Class({
         this[label] = value;
         this.update_info_table();
     },
+   
     start:function()
     {
         this.current_hp = this.node.getComponent("creature").HP;

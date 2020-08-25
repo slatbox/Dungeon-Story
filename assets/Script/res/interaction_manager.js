@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Sewen
  * @Date: 2020-07-10 08:10:43
- * @LastEditTime: 2020-08-20 15:22:02
+ * @LastEditTime: 2020-08-25 17:33:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\res\interaction_manager.js
@@ -35,7 +35,11 @@ const InteractionManager = cc.Class({
         normal_jar:cc.Prefab,
         gold:cc.Prefab,
         normal_key:cc.Prefab,
-        blood:cc.Prefab
+        blood:cc.Prefab,
+
+        normal_iron_sword:cc.Prefab,
+        ice_bow:cc.Prefab,
+        pick_up_tool_sound:cc.AudioClip
     },
     
     random_interaction:function()
@@ -55,6 +59,20 @@ const InteractionManager = cc.Class({
        
         return item;
     },
+    random_tool:function()
+    {
+        if(!this.tool_list){
+            this.tool_list = [
+                this.normal_iron_sword,
+                this.ice_bow
+            ];
+        }
+        
+        var tool = cc.instantiate(this.tool_list[Math.floor(Math.random() * this.tool_list.length)]);
+        tool.scaleX = 0.85;
+        tool.scaleY = 0.85;
+        return tool;
+    },
     create_normal_jar:function()
     {
         var jar = cc.instantiate(this.normal_jar);
@@ -62,7 +80,10 @@ const InteractionManager = cc.Class({
         jar.anchorY = 0;
         return jar;
     },
-    
+    start:function()
+    {
+        window.Global.pick_up_sound = this.pick_up_tool_sound;
+    },
 
 
 });

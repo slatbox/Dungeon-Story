@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Swen
 
  * @Date: 2020-08-18 15:56:37
- * @LastEditTime: 2020-08-22 15:23:39
+ * @LastEditTime: 2020-08-25 18:43:23
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to allocate items ,interactions and actors in a room 
@@ -39,6 +39,7 @@ const ObjectManager = cc.Class({
             default:null,
             type:ActorPrefabManager
         },
+        ground_effect:cc.Prefab,
         // low_parrerns:RoomPattern,
         guard_rate:0.5,
 
@@ -153,12 +154,15 @@ const ObjectManager = cc.Class({
         
         if(type == "null")return;
         var num_of_jar = 0;
+        var num_of_tool = 0;
         if(type == 'jar')
             num_of_jar = 1;
         else if(type == 'jar_2')
             num_of_jar = 2;
         else if(type == 'jar_3')
             num_of_jar = 3;
+        else if(type == 'tool')
+            num_of_tool = 1;
         while(num_of_jar--){
             if(room.is_full(sub_room))
                 break;
@@ -171,6 +175,20 @@ const ObjectManager = cc.Class({
             jar.pos = pos;
             room.interactions[pos.x][pos.y] = jar;
             room.node.addChild(jar);
+        }
+        while(num_of_tool--){
+            if(room.is_full(sub_room))
+                break;
+            var pos = sub_room.random_pos();
+            while (room.is_occupied(pos)) {
+                pos = sub_room.random_pos();
+            }
+            var tool = this.interactions_manager.random_tool();
+            
+            tool.position = new cc.Vec2(pos.y * TileWidth + 0.5 * TileWidth, - (pos.x * TileWidth + 0.5 * TileWidth));
+            tool.pos = pos;
+            room.interactions[pos.x][pos.y] = tool;
+            room.node.addChild(tool);
         }
         
     },
@@ -269,6 +287,7 @@ const ObjectManager = cc.Class({
             ['locked',[4,'certain'],'tool'],
             ['locked',[4,'rate'],'jar_3'],
         ];
+        
         this.patterns = {
             "low":low,
             "path_middle":path_middle,
