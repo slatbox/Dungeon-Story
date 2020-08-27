@@ -5,28 +5,59 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+const types = require("types");
+const ToolTypes = types.ToolTypes;
 const Spiner = cc.Class({
     extends: cc.Component,
 
     properties: {
-        icon_set:{
-            default:[],
-            type:cc.SpriteFrame
-        },
+        // icon_set:{
+        //     default:[],
+        //     type:cc.SpriteFrame
+        // },
+        bad_luck_icon:cc.SpriteFrame,
         spin_time:0.5,
         spin_gap: 50,
         trigger_time:1
     },
     create_random_icon:function()
     {
+        var rand0 = Math.random();
+        var rand1 = Math.random();
+        var rand2 = Math.random();
+        var using_icon;
+        var corre_tool_comp;
+        if(rand0 < this.good_luck_chance)
+            if(rand1 < this.arm_chance)
+                if(rand2 < this.main_arm_chance)
+                {
+                    corre_tool_comp = this.corresponding_tool_set.main_arm;
+                    using_icon = this.icon_set.main_arm;
+                }
+                else
+                {
+                    corre_tool_comp = this.corresponding_tool_set.asis_arm;
+                    using_icon = this.icon_set.asis_arm;
+                }     
+            else
+            {
+                corre_tool_comp = this.corresponding_tool_set.asis_tool;
+                using_icon = this.icon_set.asis_tool;
+            }
+        else
+        {
+            corre_tool_comp = null;
+            using_icon = this.icon_set.bad_luck;
+        }
+
         var random_icon = new cc.Node();
-        random_icon.addComponent(cc.Sprite).spriteFrame = this.icon_set[Math.floor(Math.random() * this.icon_set.length)];
+        random_icon.addComponent(cc.Sprite).spriteFrame = using_icon;
+        random_icon.corre_tool_comp = corre_tool_comp;
         random_icon.anchorX = 0.5;
         random_icon.anchorY = 0.5;
         random_icon.x = 0;
         random_icon.y = 0;
         return random_icon;
-    
     },
     spin_out_new_icon:function()
     {
@@ -67,9 +98,33 @@ const Spiner = cc.Class({
         this.node.stopAction(this.current_action);
         this.start_spin();
     },
-    onLoad:function()
+    set_spin_chance:function()
     {
-        
+
+    },
+    init:function(tool_comps,chance_set)
+    {
+        //init chances
+        var main_arm = tool_comps[ToolTypes.arm_main];
+        var asis_arm = tool_comps[ToolTypes.arm_asis];
+        var asis_tool = tool_comps[ToolTypes.tool];
+        this.arm_chance = asis_tool? chance_set.arm_chance : 1.0;
+        this.main_arm_chance = asis_arm ? chance_set.main_arm_chance : 1.0;
+        // var hero_comp = window.Global.hero_comp;
+        this.good_luck_chance = 0.5;
+
+        this.icon_set = {
+            main_arm:main_arm.node.getComponent(cc.Sprite).spriteFrame,
+            asis_arm:(asis_arm ? asis_arm.node.getComponent(cc.Sprite).spriteFrame : null),
+            asis_tool:(asis_tool ? asis_tool.node.getComponent(cc.Sprite).spriteFrame : null),
+            bad_luck:this.bad_luck_icon
+        };
+        this.corresponding_tool_set = {
+            main_arm:main_arm,
+            asis_arm:asis_arm,
+            asis_tool:asis_tool,
+        };
+        //init spiner elements
         var up_icon = this.create_random_icon();
         up_icon.y = this.spin_gap;
 
@@ -84,6 +139,11 @@ const Spiner = cc.Class({
         this.middle_icon = middle_icon;
         this.up_icon = up_icon;
         this.down_icon = down_icon;
+    },
+    onLoad:function()
+    {
+        
+        
     },
     stop:function()
     {

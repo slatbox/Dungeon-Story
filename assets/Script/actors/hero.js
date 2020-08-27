@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-21 10:57:21
- * @LastEditTime: 2020-08-25 17:21:55
+ * @LastEditTime: 2020-08-27 16:35:20
  * @LastEditors: Please set LastEditors
  * 
  * @Description: specific class for hero
@@ -28,6 +28,11 @@ cc.Class({
         {
             default:[],
             type: cc.AudioClip
+        },
+        default_tools:
+        {
+            default:[],
+            type:cc.Prefab
         },
         current_hp:0,
         normal_keys:0,
@@ -87,11 +92,19 @@ cc.Class({
         this[label] = value;
         this.update_info_table();
     },
-   
+    onLoad:function()
+    {
+        window.Global.hero_comp = this;
+    },
     start:function()
     {
         this.current_hp = this.node.getComponent("creature").HP;
         this.update_info_table();
+        for(var i = 0 ; i < this.default_tools.length;i++){
+            var new_tool = cc.instantiate(this.default_tools[i]).getComponent("tool");
+            new_tool.is_default = 1;
+            new_tool.collect_into_bag();
+        }
     }
     // update (dt) {},
 });

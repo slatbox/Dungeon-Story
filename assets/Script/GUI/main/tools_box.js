@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:39:21
- * @LastEditTime: 2020-08-25 18:35:04
+ * @LastEditTime: 2020-08-25 20:31:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\main\tools_box.js
@@ -37,10 +37,10 @@ cc.Class({
         }
         if (this.tools[tool_comp.type]) {
             var old_tool = this.tools[tool_comp.type]; 
-            old_tool.drop_back_to_room(tool_comp.ij_pos,this);
+            old_tool.drop_back_to_room(tool_comp.node.pos,this);
         }
         this.convert_to_button(tool_comp);
-        tool_comp.node.position = new cc.Vec2(this.table_pos1.x + tool_comp.node.width * 1.1 * tool_comp.type, this.table_pos1.y);
+        tool_comp.node.position = new cc.Vec2(this.table_pos1.x + tool_comp.node.width * 1.2 * tool_comp.type, this.table_pos1.y);
         tool_comp.node.removeFromParent(false);
         this.node.addChild(tool_comp.node);
         this.tools[tool_comp.type] = tool_comp;
@@ -50,5 +50,6 @@ cc.Class({
         if(!this.tools){
             this.tools = [];
         }
+        
     },  
 })

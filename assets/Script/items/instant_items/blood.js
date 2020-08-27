@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-08-06 15:26:02
- * @LastEditTime: 2020-08-21 10:14:50
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-27 19:24:39
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\instant_items\blood.js
  */
@@ -38,7 +38,8 @@ cc.Class({
                 cc.removeSelf()
             );
             var hero_cmp = hero.getComponent("hero");
-            hero_cmp.set_value("current_hp", hero_cmp.current_hp + this.value);
+            var max_hp = hero.getComponent("creature").HP;
+            hero_cmp.set_value("current_hp", (hero_cmp.current_hp + this.value)%max_hp);
             this.node.runAction(seq);
             cc.audioEngine.playEffect(this.sound_effect, false);
             this.node.parent.getComponent("room").interactions[this.node.pos.x][this.node.pos.y] = null;

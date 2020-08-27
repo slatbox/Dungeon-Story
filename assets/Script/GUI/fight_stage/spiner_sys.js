@@ -21,6 +21,10 @@ cc.Class({
             default:[],
             type:Spiner
         },
+        main_arm_chance:0.5,
+        asis_arm_chance:0.5,
+        arm_chance:0.7,
+        asis_tool_chance:0.3,
         spin_button:cc.Button,
         spin_color:cc.Color,
         stop_color:cc.Color,
@@ -103,10 +107,24 @@ cc.Class({
         this.current_action = seq;
         this.node.runAction(seq);
     },
+    init:function()
+    {
+        var tool_comps = cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").tools;
+        var chance_set = {
+            main_arm_chance:this.main_arm_chance,
+            asis_arm_chance:this.asis_arm_chance,
+            arm_chance:this.arm_chance,
+            asis_tool_chance:this.asis_tool_chance,
+        };
+        for(var i = 0 ; i < this.spiners.length;i++){
+            this.spiners[i].init(tool_comps,chance_set);
+        }
+    },
     start:function()
     {
         this.spin_button.state = SpinerButtonState.SPIN;
         this.spin_button.normalColor = this.spin_color;
+        
     },
     
 });

@@ -196,8 +196,16 @@
         "__uuid__": "7878d0ab-6ccd-4227-a352-9a626c736366"
       }
     ],
+    "default_tools": [
+      {
+        "__uuid__": "e054f374-b535-43f5-be9f-1beae81ec173"
+      },
+      {
+        "__uuid__": "1fa11589-b60e-44d3-87fe-0e3ed4de514d"
+      }
+    ],
     "current_hp": 0,
-    "keys": 0,
+    "normal_keys": 0,
     "gold": 0,
     "_id": ""
   },

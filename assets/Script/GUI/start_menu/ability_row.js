@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-12 17:31:02
- * @LastEditTime: 2020-08-22 14:51:30
+ * @LastEditTime: 2020-08-27 18:58:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\start_menu\ability_row.js
@@ -35,7 +35,8 @@ const AbilityRow = cc.Class({
     {
        var percent = level/this.max;
        this.bar.width = this.max_width * percent;
-       this.bar.height = 65.54;
+       var label = this.node.getChildByName("Label");
+       this.bar.height = label.height * label.scaleY;
        var to_show = String(level);
        if(this.show_max)
         to_show += "/" + String(this.max);
@@ -57,6 +58,7 @@ const AbilityRow = cc.Class({
         bar.anchorY = 0.5;
         bar.x = label.x + width/2;
         bar.y = label.y;
+        
         bar.color = this.color;
         this.bar = bar;
         bar_layer.addChild(bar);

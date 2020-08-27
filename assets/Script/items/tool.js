@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:49:55
- * @LastEditTime: 2020-08-25 18:36:57
+ * @LastEditTime: 2020-08-25 20:22:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tool.js
@@ -29,6 +29,9 @@ cc.Class({
 
     start:function()
     {
+        if(this.is_default){
+            return;
+        }
         var action = cc.repeatForever(
             cc.sequence(
                 cc.moveBy(0.8,0,10).easing(cc.easeSineInOut()),
@@ -39,6 +42,7 @@ cc.Class({
         this.current_action = action;
     },
     collect_into_bag:function(){
+        
         this.node.stopAction(this.current_action);
         this.node.scaleX = 1;
         this.node.scaleY = 1;
@@ -61,6 +65,7 @@ cc.Class({
             ij_pos.y * TileWidth + 0.5 * TileWidth,
             - (ij_pos.x * TileWidth + 0.5 * TileWidth)
             );
+        this.node.pos = ij_pos;
         this.node.scaleX = 0.85;
         this.node.scaleY = 0.85;
         this.node.parent = cc.find("Canvas/GameWorld").getComponent("game_world").current_room;

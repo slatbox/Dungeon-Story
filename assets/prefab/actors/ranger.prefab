@@ -199,6 +199,11 @@
         "__uuid__": "7878d0ab-6ccd-4227-a352-9a626c736366"
       }
     ],
+    "default_tools": [
+      {
+        "__uuid__": "97c61270-e63d-4b81-aef4-a85ecb6c88e5"
+      }
+    ],
     "current_hp": 0,
     "normal_keys": 0,
     "gold": 0,
