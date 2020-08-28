@@ -24,6 +24,12 @@ cc.Class({
             default:ToolTypes.arm_main,
             type:ToolTypes
         },
+        HP:0,
+        AT:0,
+        DF:0,
+        SP:0,
+        LK:0,
+        MG:0,
         description:"This is as tool"
     },
 
