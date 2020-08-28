@@ -24,10 +24,13 @@
       },
       {
         "__id__": 3
+      },
+      {
+        "__id__": 4
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -125,6 +128,22 @@
       }
     ],
     "playOnLoad": true,
+    "_id": ""
+  },
+  {
+    "__type__": "73fc2YIZN5Mhrl6cD6ctAO0",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "HP": 0,
+    "AT": 0,
+    "DF": 0,
+    "SP": 0,
+    "LK": 0,
+    "MG": 0,
     "_id": ""
   },
   {

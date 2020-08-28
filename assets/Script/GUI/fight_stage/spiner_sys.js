@@ -89,6 +89,13 @@ cc.Class({
             this.spin_button.state = SpinerButtonState.SPIN;
             this.spin_button.normalColor = this.spin_color;
             this.set_spin_button_label("Spin");
+        };
+        var do_spin_result = function(){
+            
+            for(var i = 0 ; i < this.spiners.length;i++){
+                this.results.push(this.spiners[i].result);
+            }
+            this.node.parent.getComponent("fight_stage").do_spin_result(this.results);
         }
         var seq = cc.sequence(
             cc.callFunc(call0,this),
@@ -98,8 +105,9 @@ cc.Class({
             cc.delayTime(time),
             cc.callFunc(close_respin,this),
             cc.callFunc(call2,this),
-            cc.delayTime(time),
-            cc.callFunc(open_spin,this)
+            cc.delayTime(time + 0.5),
+            cc.callFunc(open_spin,this),
+            cc.callFunc(do_spin_result,this)
         );
         this.spin_button.state = SpinerButtonState.WAIT;
         this.spin_button.normalColor = this.wait_color;
@@ -107,7 +115,7 @@ cc.Class({
         this.current_action = seq;
         this.node.runAction(seq);
     },
-    init:function()
+    init:function(hero,enemy)
     {
         var tool_comps = cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").tools;
         var chance_set = {
@@ -116,8 +124,15 @@ cc.Class({
             arm_chance:this.arm_chance,
             asis_tool_chance:this.asis_tool_chance,
         };
+        this.results = [];
         for(var i = 0 ; i < this.spiners.length;i++){
-            this.spiners[i].init(tool_comps,chance_set);
+            this.spiners[i].init(tool_comps,chance_set,hero,enemy);
+        }
+    },
+    clear:function()
+    {
+        for(var i = 0 ; i < this.spiners.length;i++){
+            this.spiners[i].clear();
         }
     },
     start:function()
@@ -126,5 +141,19 @@ cc.Class({
         this.spin_button.normalColor = this.spin_color;
         
     },
+    update:function(dt)
+    {
+        // var has_stoped = true;
+        // for(var i = 0 ; i < this.spiners.length;i++){
+        //     has_stoped = (has_stoped && !this.spiners[i].is_spining);
+        // }
+        // this.results = [];
+        // if(has_stoped){
+        //     for(var i = 0 ; i < this.spiners.length;i++){
+        //         this.results.push(this.spiners[i].result);
+        //     }
+        // }
+    },
+    
     
 });

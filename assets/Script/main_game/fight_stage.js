@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-27 19:18:17
+ * @LastEditTime: 2020-08-28 17:36:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -40,12 +40,14 @@ cc.Class({
         this.hero.y = this.back_ground.y-this.actor_dis;
         this.enemy.x = this.actor_gap/2;
         this.enemy.y = this.back_ground.y-this.actor_dis;
+        
         this.enemy.current_hp = this.enemy.getComponent("creature").HP;
         
         this.hero.runAction(cc.flipX(true));
 
         this.back_room = back_room;
-        this.spiner_system.getComponent("spiner_sys").init();
+        var spiner_sys = this.spiner_system.getComponent("spiner_sys");
+        spiner_sys.init(hero,enemy);
         //hide irelative gui
         var mini_map = cc.find("mini_map");
         var BasicInfomation = cc.find("BasicInfomation");
@@ -83,6 +85,7 @@ cc.Class({
         var menu = cc.find("menu");
         mini_map.active = true;
         BasicInfomation.active = true;
+        this.spiner_system.getComponent("spiner_sys").clear();
         // menu.runAction(cc.moveTo(0.2,menu.original_pos));
     },
     onEnable:function()
@@ -99,6 +102,72 @@ cc.Class({
             this.node.addChild(yellow_explode);
           }, this);
         
+    },
+    make_temp_values_object:function(comp_with_values)
+    {
+        var tem_values = {
+            HP:comp_with_values.HP,
+            AT:comp_with_values.AT,
+            DF:comp_with_values.DF,
+            LK:comp_with_values.LK,
+            SP:comp_with_values.SP,
+            MG:comp_with_values.MG,
+        };
+        return tem_values;
+    },
+    compute_values:function()
+    {
+
+        var basic_values = this.hero.getComponent("creature").get_combat_values_contribution([]);
+        var result_values = this.doing_result_comp.node.getComponent("tool").get_combat_values_contribution([]);
+        for(var each_attribute in this.final_data){
+            this.final_data[each_attribute] = basic_values[each_attribute] + result_values[each_attribute];
+        }
+    },
+    before_attack:function(hero,enemy)
+    {
+        
+        this.doing_result_comp.before_attack(hero,enemy);
+    },
+    during_attack:function(hero,enemy)
+    {
+        this.doing_result_comp.during_attack(hero,enemy);
+    },
+    after_attack:function(hero,enemy)
+    {
+        this.doing_result_comp.after_attack(hero,enemy);
+    },
+
+    do_spin_result:function(results)
+    {
+        
+        var result_comp = results[0].corre_function_comp;
+        if(!result_comp){
+            return;
+        }
+        var multiply = 1;
+        if(results[1].corre_function_comp.node.name == result_comp.node.name){
+            multiply += 1;
+            if(results[2].corre_function_comp.node.name == result_comp.node.name)
+                multiply += 1;
+        }
+        this.doing_result_comp = result_comp.getComponent(result_comp.node.name);
+        this.multiply = multiply;
+        this.final_data = {
+            HP: 0,
+            AT: 0,
+            DF: 0,
+            SP: 0,
+            LK: 0,
+            MG: 0
+        }
+        if(!this.doing_result_comp){
+            return;
+        }
+        this.compute_values();
+        this.before_attack(this.hero,this.enemy);
+        this.during_attack(this.hero,this.enemy);
+        this.after_attack(this.hero,this.enemy);hero,enemy
     },
     
 });
