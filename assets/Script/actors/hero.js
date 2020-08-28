@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-21 10:57:21
- * @LastEditTime: 2020-08-28 14:56:18
+ * @LastEditTime: 2020-08-28 19:34:15
  * @LastEditors: Please set LastEditors
  * 
  * @Description: specific class for hero
@@ -38,7 +38,7 @@ cc.Class({
         normal_keys:0,
         gold:0
     },
-
+    
     move:function(direction)
     {
         var call = function()

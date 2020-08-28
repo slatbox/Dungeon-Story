@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-28 17:36:41
+ * @LastEditTime: 2020-08-28 22:02:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -131,11 +131,13 @@ cc.Class({
     },
     during_attack:function(hero,enemy)
     {
-        this.doing_result_comp.during_attack(hero,enemy);
+        this.doing_result_comp.during_attack(hero,enemy,this.final_data);
     },
     after_attack:function(hero,enemy)
     {
         this.doing_result_comp.after_attack(hero,enemy);
+
+        //检测怪兽死亡
     },
 
     do_spin_result:function(results)
@@ -167,7 +169,7 @@ cc.Class({
         this.compute_values();
         this.before_attack(this.hero,this.enemy);
         this.during_attack(this.hero,this.enemy);
-        this.after_attack(this.hero,this.enemy);hero,enemy
+        this.after_attack(this.hero,this.enemy);
     },
     
 });

@@ -92,6 +92,7 @@ cc.Class({
         };
         var do_spin_result = function(){
             
+            this.results = [];
             for(var i = 0 ; i < this.spiners.length;i++){
                 this.results.push(this.spiners[i].result);
             }

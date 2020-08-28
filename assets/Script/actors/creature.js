@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-03 13:00:01
- * @LastEditTime: 2020-08-28 15:32:31
+ * @LastEditTime: 2020-08-28 19:52:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\actors\creature.js

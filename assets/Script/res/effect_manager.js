@@ -35,7 +35,7 @@ const EffectManager = cc.Class({
         var random_bias_y = Math.floor(Math.random() * (max_bias - min_bias + 1)) + min_bias;
         return new cc.Vec2(random_bias_x,random_bias_y);
     },
-    chop_big:function()
+    big_chop_action:function(enemy)
     {
         var sp_set = [this.chop_light_big_right,this.chop_light_big_left];
         var rand1 = sp_set[Math.floor(Math.random() *sp_set.length)];
@@ -66,11 +66,16 @@ const EffectManager = cc.Class({
             cc.fadeOut(0.3),
             cc.removeSelf()
         );
-        chop1.runAction(action1);
-        chop2.runAction(action2);
-        return tem;
+        var call = cc.callFunc(function(){
+            chop1.runAction(action1);
+            chop2.runAction(action2);
+            tem.y = enemy.height/2;
+            enemy.addChild(tem);
+        },this);
+        
+        return call;
     },
-    chop_small:function()
+    chop_small:function(enemy)
     {
         var sp_set = [this.chop_light_small_right,this.chop_light_small_left];
         var rand1 = sp_set[Math.floor(Math.random() *sp_set.length)];
@@ -103,9 +108,9 @@ const EffectManager = cc.Class({
         );
         chop1.runAction(action1);
         chop2.runAction(action2);
-        return tem;
+        enemy.addChild(tem);
     },
-    scratch_small:function()
+    scratch_small:function(enemy)
     {
         var scratch1 = new cc.Node;
         scratch1.addComponent(cc.Sprite).spriteFrame = this.scratch_small_sp;
@@ -134,9 +139,9 @@ const EffectManager = cc.Class({
         );
         scratch1.runAction(action1);
         scratch2.runAction(action2);
-        return tem;
+        enemy.addChild(tem);
     },
-    scratch_big:function()
+    scratch_big:function(enemy)
     {
         var scratch1 = new cc.Node;
         scratch1.addComponent(cc.Sprite).spriteFrame = this.scratch_big_sp;
@@ -165,13 +170,69 @@ const EffectManager = cc.Class({
         );
         scratch1.runAction(action1);
         scratch2.runAction(action2);
-        return tem;
+        enemy.addChild(tem);
     },
+    get_tremble_action:function(duration,times){
+        var act = cc.sequence(
+            cc.moveBy(duration/times/2.0,-10,0),
+            cc.moveBy(duration/times/2.0,10,0),
+        );
+        return cc.repeat(act, times);
+        
+    },
+    get_harm_action:function(){
+        var harm_act = cc.spawn(
+            this.get_tremble_action(1.0,8),
+            cc.blink(1.0,3)
+        )
+        return harm_act;
+    },
+    allocate_harm_value:function(enemy,values)
+    {
+        var hp_change = values.AT - enemy.getComponent("creature").DF;
+        if(enemy.current_hp){
+            enemy.current_hp += hp_change;
+        }
+        else{
+            enemy.getComponent("hero").current_hp += hp_change;
+        }
+    },
+    do_harm_to_action:function(enemy,effect_action,values)
+    {
+        var seq = cc.sequence(
+            cc.jumpBy(0.15,enemy.width,0,15,1),
+            cc.callFunc(function(){
+                enemy.runAction(this.get_harm_action());
+                enemy.runAction(effect_action);
+                this.allocate_harm_value(enemy,values);
+            },this),
+            
+            cc.jumpBy(0.15,-enemy.width,0,15,1)
+        )
+        return seq;
+    },
+    walk_to_enemy_action:function(enemy)
+    {
+        var seq = cc.jumpTo(0.7,enemy.x - enemy.width*1.5,enemy.y,10,3);
+    
+        return seq;
+    },
+    walk_back_action:function(original_pos){
+        var seq =cc.jumpTo(0.7,original_pos,10,3);
+        
+        return seq;
+    },
+
+
     
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
 
+    onLoad:function()
+    {
+        window.Global.effect_manager = this;
+    },
     
 
     // update (dt) {},
