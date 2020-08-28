@@ -138,6 +138,12 @@
       "__id__": 1
     },
     "_enabled": true,
+    "HP": 27,
+    "AT": 3,
+    "DF": 7,
+    "SP": 10,
+    "LK": 10,
+    "MG": 10,
     "_id": ""
   },
   {
@@ -146,7 +152,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "22bd481c-8aef-4da1-9f41-a3724fb2825b"
     },
     "fileId": "9cGzzfp+JEN7sQpDR9vhU6",
     "sync": false
