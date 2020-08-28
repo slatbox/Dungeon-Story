@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-21 10:57:21
- * @LastEditTime: 2020-08-27 16:35:20
+ * @LastEditTime: 2020-08-28 14:56:18
  * @LastEditors: Please set LastEditors
  * 
  * @Description: specific class for hero
@@ -105,6 +105,8 @@ cc.Class({
             new_tool.is_default = 1;
             new_tool.collect_into_bag();
         }
-    }
+    },
+
+    
     // update (dt) {},
 });

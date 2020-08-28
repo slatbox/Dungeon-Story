@@ -24,10 +24,13 @@
       },
       {
         "__id__": 3
+      },
+      {
+        "__id__": 4
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -117,10 +120,23 @@
     },
     "_enabled": true,
     "type": 0,
-    "pick_sound": {
-      "__uuid__": "85ac6c62-c29b-4c19-8b9b-43fff4af642f"
-    },
     "description": "This is as tool",
+    "HP": 0,
+    "AT": 0,
+    "DF": 0,
+    "SP": 0,
+    "LK": 0,
+    "MG": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "dc79agM2NFIy44bN9iVZmeB",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
     "_id": ""
   },
   {
