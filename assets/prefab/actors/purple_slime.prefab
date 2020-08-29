@@ -27,10 +27,13 @@
       },
       {
         "__id__": 4
+      },
+      {
+        "__id__": 5
       }
     ],
     "_prefab": {
-      "__id__": 5
+      "__id__": 6
     },
     "_opacity": 255,
     "_color": {
@@ -144,6 +147,16 @@
     "SP": 10,
     "LK": 10,
     "MG": 10,
+    "_id": ""
+  },
+  {
+    "__type__": "c52e21qKGRNkKfT3lUzg8yW",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
     "_id": ""
   },
   {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-28 22:02:09
+ * @LastEditTime: 2020-08-29 17:55:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -28,7 +28,8 @@ cc.Class({
        },
        spiner_system:cc.Node,
        hero_hp_bar:cc.Node,
-       foe_hp_bar:cc.Node
+       foe_hp_bar:cc.Node,
+       
     },
     init:function(hero,enemy,back_room)
     {
@@ -117,12 +118,22 @@ cc.Class({
     },
     compute_values:function()
     {
-
-        var basic_values = this.hero.getComponent("creature").get_combat_values_contribution([]);
-        var result_values = this.doing_result_comp.node.getComponent("tool").get_combat_values_contribution([]);
-        for(var each_attribute in this.final_data){
-            this.final_data[each_attribute] = basic_values[each_attribute] + result_values[each_attribute];
+        var basic_values;
+        if(this.doing_result_comp.node.getComponent("tool")){
+            basic_values = this.hero.getComponent("creature").get_combat_values_contribution([]);
+            var result_values = this.doing_result_comp.node.getComponent("tool").get_combat_values_contribution([]);
+            for (var each_attribute in this.final_data) {
+                this.final_data[each_attribute] = (basic_values[each_attribute] + result_values[each_attribute])*this.multiply;
+            }
         }
+        else{
+            basic_values = this.enemy.getComponent("creature").get_combat_values_contribution([]);
+            for (var each_attribute in this.final_data) {
+                this.final_data[each_attribute] = basic_values[each_attribute]*this.multiply;
+            }
+        }
+       
+        
     },
     before_attack:function(hero,enemy)
     {
@@ -135,9 +146,17 @@ cc.Class({
     },
     after_attack:function(hero,enemy)
     {
-        this.doing_result_comp.after_attack(hero,enemy);
+        var call = function()
+        {
+            this.doing_result_comp.after_attack(hero,enemy);
 
-        //检测怪兽死亡
+            //检测怪兽死亡
+    
+            if(enemy.current_hp <= 0){
+                this.exit_stage();
+            }  
+        };
+        this.node.runAction(cc.sequence(cc.delayTime(4),cc.callFunc(call,this)));
     },
 
     do_spin_result:function(results)
@@ -154,7 +173,7 @@ cc.Class({
                 multiply += 1;
         }
         this.doing_result_comp = result_comp.getComponent(result_comp.node.name);
-        this.multiply = multiply;
+        this.multiply = multiply * this.spiner_system.getComponent("spiner_sys").multiply;
         this.final_data = {
             HP: 0,
             AT: 0,
@@ -162,7 +181,8 @@ cc.Class({
             SP: 0,
             LK: 0,
             MG: 0
-        }
+        };
+        
         if(!this.doing_result_comp){
             return;
         }

@@ -117,7 +117,7 @@ const Spiner = cc.Class({
         var hero_lk = this.hero.getComponent("creature").LK ;
         var enemy_lk = this.enemy.getComponent("creature").LK;
 
-        this.good_luck_chance = 1.0//hero_lk/(enemy_lk + hero_lk);
+        this.good_luck_chance = hero_lk/(enemy_lk + hero_lk);
 
         this.icon_set = {
             main_arm:main_arm.node.getComponent(cc.Sprite).spriteFrame,

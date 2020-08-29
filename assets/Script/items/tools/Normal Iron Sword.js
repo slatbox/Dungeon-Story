@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:59:38
- * @LastEditTime: 2020-08-28 21:57:26
+ * @LastEditTime: 2020-08-29 10:47:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Iron Sword.js
