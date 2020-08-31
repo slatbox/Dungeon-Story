@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 11:46:51
- * @LastEditTime: 2020-08-30 11:22:31
+ * @LastEditTime: 2020-08-31 18:21:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\fight_stage\escape_bar.js
@@ -62,14 +62,14 @@ cc.Class({
         this.escape_bar.x = this.random_area_x();
         this.miss = false;
     },
-    start_slide:function()
+    start_slide:function(moving_time)
     {
         this.escape_bar.x = this.random_area_x();
         var width = this.node.width;
         this.pin.position = this.original_pin_pos;
         var seq = cc.sequence(
-            cc.moveBy(this.moving_time,width,0),
-            cc.moveBy(this.moving_time, - width,0),
+            cc.moveBy(moving_time,width,0),
+            cc.moveBy(moving_time, - width,0),
         );
         this.pin.current_action = cc.repeatForever(seq)
         this.pin.runAction(this.pin.current_action);
