@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-31 18:23:46
+ * @LastEditTime: 2020-08-31 18:27:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -160,7 +160,7 @@ cc.Class({
             var enemy_sp = this.final_data.SP;
             var hero_sp = this.get_final_values(this.hero).SP;
             var escape_bar_moving_time = 0.5 + 0.5 * hero_sp / (hero_sp + enemy_sp);
-            this.escape_bar.getComponent("escape_bar").start_slide(escape_bar_moving_time);
+            this.escape_bar.getComponent("escape_bar").start_slide(escape_bar_moving_time,this.multiply);
         }
        
         
@@ -179,7 +179,7 @@ cc.Class({
         
         var call = function()
         {
-            this.doing_result_comp.after_attack(this.hero, this.enemy);
+            this.doing_result_comp.after_attack(this.hero,this.enemy);
 
             this.spiner_system.getComponent("spiner_sys").open();
             //检测怪兽死亡
