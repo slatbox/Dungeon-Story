@@ -183,7 +183,7 @@
       "array": [
         0,
         0,
-        340.1832244767235,
+        340.08818663774827,
         0,
         0,
         0,
@@ -2821,7 +2821,7 @@
       "__id__": 59
     },
     "label": "HP",
-    "max": 10,
+    "max": 150,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -3641,7 +3641,7 @@
       "__id__": 80
     },
     "label": "AT",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -4461,7 +4461,7 @@
       "__id__": 101
     },
     "label": "DF",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -5281,7 +5281,7 @@
       "__id__": 122
     },
     "label": "MG",
-    "max": 10,
+    "max": 20,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -6101,7 +6101,7 @@
       "__id__": 143
     },
     "label": "LK",
-    "max": 10,
+    "max": 20,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -6921,7 +6921,7 @@
       "__id__": 164
     },
     "label": "SP",
-    "max": 10,
+    "max": 20,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",

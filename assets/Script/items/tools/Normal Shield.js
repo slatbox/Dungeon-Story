@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-28 23:32:30
- * @LastEditTime: 2020-08-28 23:34:02
+ * @LastEditTime: 2020-08-31 15:56:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Shield.js
@@ -28,15 +28,44 @@ cc.Class({
         
     },
     during_attack: function (hero,enemy,values) {
-        // var effect_manager = window.Global.effect_manager;
-        // var original_pos = hero.position;
-        // var seq = cc.sequence(
-        //     effect_manager.walk_to_enemy_action(enemy),
-        //     cc.delayTime(0.2),
-        //     effect_manager.do_harm_to_action(enemy,effect_manager.big_chop_action(enemy),values),
-        //     effect_manager.walk_back_action(original_pos)
-        // );
-        // hero.runAction(seq);
+        var effect_manager = window.Global.effect_manager;
+        var hero_buff_pool = cc.find("Canvas/fight_stage/hero_buff_pool").getComponent("buff_pool");
+    
+        //create animation
+        var shield_icon = new cc.Node();
+        shield_icon.addComponent(cc.Sprite).spriteFrame = this.node.getComponent(cc.Sprite).spriteFrame;
+        shield_icon.position = new cc.Vec2(hero.x + hero.width,hero.y + hero.height);
+        shield_icon.runAction(cc.sequence(
+            cc.spawn(cc.fadeIn(0.1),cc.moveBy(0.3,0,-30)),
+            cc.spawn(cc.fadeOut(0.1),cc.moveBy(0.3,0,30).easing(cc.easeBounceIn())),
+            cc.removeSelf()
+        ));
+        hero.parent.addChild(shield_icon);
+        //create buff
+        var buff = effect_manager.create_buff(this.node.getComponent(cc.Sprite).spriteFrame,hero,enemy);
+        buff.name = "shield";
+        buff.usage_time = 1;
+        buff.is_out_of_date = function()
+        {
+            if(this.usage_time == 0)
+                return true;
+            else 
+                return false;
+        };
+        buff.listen = function(event,data,emitter)
+        {
+            if(event == "hero_basic_values"){
+                data.DF *= 2;
+            }
+            if(event == "hero_get_harm"){
+                this.usage_time = 0;
+            }
+        };
+        hero_buff_pool.add_buff(buff);
+
+        var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
+        fight_stage.next_phase();
+
     },
     after_attack: function (hero,enemy) {
     

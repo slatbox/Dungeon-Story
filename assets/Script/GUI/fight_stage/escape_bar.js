@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 11:46:51
- * @LastEditTime: 2020-08-28 08:05:56
+ * @LastEditTime: 2020-08-30 11:22:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\fight_stage\escape_bar.js
@@ -42,7 +42,8 @@ cc.Class({
     },
     button_call_back:function(){
       if(this.state == EscapBarState.STOP){
-          this.start_slide();
+        //   this.start_slide();
+        
       }  
       else{
           this.stop_slide();
@@ -56,9 +57,10 @@ cc.Class({
         var max_x = length - area_width/2.0;
         return Math.random() * (max_x - min_x) + min_x - length/2;
     },
-    init:function(foe,hero)
+    init:function()
     {
         this.escape_bar.x = this.random_area_x();
+        this.miss = false;
     },
     start_slide:function()
     {
@@ -76,12 +78,26 @@ cc.Class({
         this.control_button.node.getChildByName()
         this.button_label.string = "Stop";
     },
+    is_in_escape_bar:function()
+    {
+        if(this.pin.x < this.escape_bar.x + this.escape_bar.width/2 && 
+            this.pin.x > this.escape_bar.x - this.escape_bar.width/2)
+        {
+            return true;
+        }
+        return false;
+    },
     stop_slide:function()
     {
         this.pin.stopAction(this.pin.current_action);
         this.state = EscapBarState.STOP;
         this.control_button.normalColor = this.start_button_color;
-        this.button_label.string = "Start";
+        this.button_label.string = "Wait";
+        this.miss = this.is_in_escape_bar();
+
+        var fight_state = cc.find("Canvas/fight_stage");
+        fight_state.getComponent("fight_stage").next_phase();
+        
     },
     update:function(dt)
     {

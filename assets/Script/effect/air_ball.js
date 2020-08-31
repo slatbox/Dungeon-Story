@@ -1,12 +1,17 @@
 /*
  * @Author: your name
- * @Date: 2020-08-29 14:15:55
- * @LastEditTime: 2020-08-29 20:07:10
+ * @Date: 2020-08-30 19:47:59
+ * @LastEditTime: 2020-08-30 21:25:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \Dungeon-Story\assets\Script\effect\arrow.js
+ * @FilePath: \Dungeon-Story\assets\Script\effect\air_ball.js
  */
-
+// Learn cc.Class:
+//  - https://docs.cocos.com/creator/manual/en/scripting/class.html
+// Learn Attribute:
+//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
@@ -36,12 +41,23 @@ cc.Class({
                 this.effect_manager.allocate_harm_value(this.target,this.values),
                 // this.effect_manager.arrow_wound_action(this.target)
             );
-            this.target.runAction(seq);
-            this.node.runAction(cc.sequence(cc.delayTime(2),cc.removeSelf(true)));
+            
+            var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
+
+            if (escape_bar.getComponent("escape_bar").miss) {
+                this.node.runAction(cc.sequence(cc.delayTime(1.0),cc.fadeIn(0.5),cc.removeSelf()));
+            }
+            else{
+                this.node.runAction(cc.sequence(cc.fadeOut(0.1),cc.removeSelf()));
+            }
             this.state = 0;
+            
+            this.target.runAction(seq);
+            
+            
         }
     }
     
-    
-    
+
+    // update (dt) {},
 });

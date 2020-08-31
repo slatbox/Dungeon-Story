@@ -11,6 +11,7 @@ const EffectManager = cc.Class({
     properties: {
         yellow_explode:cc.Prefab,
         gray_explode:cc.Prefab,
+        buff:cc.Prefab,
         arrow:cc.Prefab,
         gray_book:cc.Prefab,
         air_ball:cc.Prefab,
@@ -21,6 +22,7 @@ const EffectManager = cc.Class({
         scratch_big_sp:cc.SpriteFrame,
         scratch_small_sp:cc.SpriteFrame,
         bump_small_sp:cc.SpriteFrame,
+
     },
     
     explode_gray:function()
@@ -146,7 +148,7 @@ const EffectManager = cc.Class({
         
         return call;
     },
-    scratch_small:function(enemy)
+    small_scratch_action:function(enemy)
     {
         var scratch1 = new cc.Node;
         scratch1.addComponent(cc.Sprite).spriteFrame = this.scratch_small_sp;
@@ -173,9 +175,13 @@ const EffectManager = cc.Class({
             cc.fadeOut(0.3),
             cc.removeSelf()
         );
-        scratch1.runAction(action1);
-        scratch2.runAction(action2);
-        enemy.addChild(tem);
+        var call = cc.callFunc(function(){
+            scratch1.runAction(action1);
+            scratch2.runAction(action2);
+            tem.y = enemy.height/2;
+            enemy.addChild(tem);
+        });
+        return call;
     },
     small_bump_action:function(enemy)
     {
@@ -216,7 +222,7 @@ const EffectManager = cc.Class({
         
         return call;
     },
-    scratch_big:function(enemy)
+    big_scratch_action:function(enemy)
     {
         var scratch1 = new cc.Node;
         scratch1.addComponent(cc.Sprite).spriteFrame = this.scratch_big_sp;
@@ -243,9 +249,13 @@ const EffectManager = cc.Class({
             cc.fadeOut(0.3),
             cc.removeSelf()
         );
-        scratch1.runAction(action1);
-        scratch2.runAction(action2);
-        enemy.addChild(tem);
+        var call = cc.callFunc(function(){
+            scratch1.runAction(action1);
+            scratch2.runAction(action2);
+            tem.y = enemy.height/2;
+            enemy.addChild(tem);
+        });
+        return call;
     },
     create_air_ball:function(){
         return cc.instantiate(this.air_ball);
@@ -253,6 +263,13 @@ const EffectManager = cc.Class({
     create_gray_book:function()
     {
         return cc.instantiate(this.gray_book);
+    },
+    create_buff:function(spriteFrame,hero,enemy){
+        var buff = cc.instantiate(this.buff);
+        buff.getComponent(cc.Sprite).spriteFrame = spriteFrame;
+        buff.hero = hero;
+        buff.enemy = enemy;
+        return buff;
     },
     get_tremble_action:function(duration,times){
         var act = cc.sequence(
@@ -263,19 +280,45 @@ const EffectManager = cc.Class({
         
     },
     get_harm_action:function(){
+        var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
         var harm_act = cc.spawn(
             this.get_tremble_action(1.0,8),
             cc.blink(1.0,3)
         )
+        if(escape_bar.getComponent("escape_bar").miss){
+            harm_act = cc.sequence(
+                cc.spawn(
+                    cc.moveBy(0.1,0,-20),
+                    cc.fadeTo(0.1,160)
+                ),
+                cc.delayTime(0.5),
+                cc.spawn(
+                    cc.moveBy(0.3,0,20),
+                    cc.fadeTo(0.3,255)
+                )
+                );
+            
+        }
+        
         return harm_act;
     },
     allocate_harm_value:function(enemy,values)
     {
         var hero_hp_bar = cc.find("Canvas/fight_stage/hero_hp_bar").getComponent("ability_row");
         var enemy_hp_bar = cc.find("Canvas/fight_stage/foe_hp_bar").getComponent("ability_row");
+        var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
+        var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
+        var stage = cc.find("Canvas/fight_stage");
+        stage.getComponent("fight_stage").next_phase();
+
+        if(escape_bar.getComponent("escape_bar").miss){
+            escape_bar.getComponent("escape_bar").miss = false;
+            return;
+        }
         var k3 = 0.75;
         var k5 = 300;
-        var enemy_df = enemy.getComponent("creature").DF;
+        var enemy_df = stage.getComponent("fight_stage").get_final_values(enemy).DF;
+
         var hp_change =  - Math.floor(values.AT*(1 - k3 * enemy_df/(enemy_df + k5)));
         if(enemy.current_hp){
             enemy.current_hp += hp_change;
@@ -287,12 +330,16 @@ const EffectManager = cc.Class({
             enemy.getComponent("hero").current_hp += hp_change;
             enemy.getComponent("hero").current_hp = enemy.getComponent("hero").current_hp < 0 ? 0 : enemy.getComponent("hero").current_hp;
             hero_hp_bar.set_level(enemy.getComponent("hero").current_hp);
+            
+            fight_stage.broadcast("hero_get_harm",0,this);
         }
+        
     },
     do_harm_to_action:function(enemy,effect_action,values)
     {
         var act = cc.jumpBy(0.15,enemy.width,0,15,1);
 
+        var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
         if(enemy.getComponent("hero")){
             act = act.reverse();
         }
@@ -300,7 +347,9 @@ const EffectManager = cc.Class({
             act,
             cc.callFunc(function(){
                 enemy.runAction(this.get_harm_action());
-                enemy.runAction(effect_action);
+                if(!escape_bar.getComponent("escape_bar").miss){
+                    enemy.runAction(effect_action);
+                }
                 this.allocate_harm_value(enemy,values);
             },this),
             
@@ -325,6 +374,38 @@ const EffectManager = cc.Class({
         
         return seq;
     },
+    fly_to_action:function(enemy)
+    {
+        var action;
+        if(enemy.getComponent("hero"))
+            action = cc.moveTo(0.7,enemy.x + enemy.width,enemy.y + enemy.height);
+        else
+            action = cc.moveTo(0.7,enemy.x - enemy.width,enemy.y + enemy.height);
+        return action;
+    },
+    charge_do_harm_to:function(enemy,effect_action,values)
+    {
+        var act = cc.moveTo(0.2,enemy.x,enemy.y / 2).easing(cc.easeBounceIn());
+
+        var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
+        
+        var seq = cc.sequence(
+            act,
+            cc.callFunc(function(){
+                enemy.runAction(this.get_harm_action());
+                if(!escape_bar.getComponent("escape_bar").miss){
+                    enemy.runAction(effect_action);
+                }
+                this.allocate_harm_value(enemy,values);
+            },this)
+        );
+        
+        return seq;
+    },
+    fly_back_action:function(original_pos)
+    {
+        return cc.moveTo(0.6,original_pos);
+    },
     step_a_bit_action:function(enemy){
         if(enemy.getComponent("hero")){
             return cc.jumpBy(0.2, - enemy.width/2,0,10,1);
@@ -344,7 +425,7 @@ const EffectManager = cc.Class({
         return seq;
     },
     
-    shot_action:function(shooter,enemy,values){
+    shoot_recoil_action:function(shooter,enemy,values){
 
         var direction = cc.repeatForever(cc.moveBy(0.1,-170,0));
         if(shooter.getComponent("hero")){
@@ -362,11 +443,37 @@ const EffectManager = cc.Class({
             this.recoil_action(shooter)
         );
         return seq;
-
-        
-        
     },
 
+    recoil_forward_action:function(shooter)
+    {
+        var shooter_seq = cc.sequence(
+            cc.moveBy(0.1,-20,0),
+            cc.moveBy(0.1,20,0)
+        );
+        if(shooter.getComponent("hero")){
+            return shooter_seq.reverse();
+        }
+        return shooter_seq;
+    },
+    shoot_forward_action:function(shooter,to_shoot)
+    {
+        var direction = cc.repeatForever(cc.moveBy(0.1,-70,0));
+        if(shooter.getComponent("hero")){
+            direction = direction.reverse();
+        }
+
+        var seq = cc.sequence(
+            cc.callFunc(function(){
+                to_shoot.opacity = 255;
+                to_shoot.runAction(direction);
+                shooter.parent.addChild(to_shoot);
+                to_shoot.position = new cc.Vec2(shooter.x,shooter.y + shooter.height / 2);
+            },this),
+            this.recoil_forward_action(shooter)
+        );
+        return seq;
+    },
 
     
     // LIFE-CYCLE CALLBACKS:

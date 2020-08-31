@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-29 16:24:40
- * @LastEditTime: 2020-08-29 16:32:43
+ * @LastEditTime: 2020-08-30 20:48:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\effect\magic_book.js
@@ -44,9 +44,12 @@ cc.Class({
                     cc.moveBy(0.5,0,30),
                     cc.moveBy(0.5,0,-30)
                 ));
-                this.node.runAction(action);
-            },this)
+            },this),
+            cc.delayTime(1),
+            cc.spawn(cc.fadeOut(0.5),cc.moveBy(0.5,0,70)),
+            cc.removeSelf()
         ); 
+        this.node.runAction(seq);
         
     },
     // update (dt) {},

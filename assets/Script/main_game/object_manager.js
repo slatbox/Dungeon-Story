@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Swen
 
  * @Date: 2020-08-18 15:56:37
- * @LastEditTime: 2020-08-25 18:43:23
+ * @LastEditTime: 2020-08-30 17:44:06
  * @LastEditors: Please set LastEditors
  * 
  * @Description: used to allocate items ,interactions and actors in a room 

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-29 10:58:28
- * @LastEditTime: 2020-08-29 15:27:00
+ * @LastEditTime: 2020-08-30 19:37:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\actors\enemys\green_gobin_bowman.js
@@ -29,7 +29,7 @@ cc.Class({
         var seq = cc.sequence(
             effect_manager.step_a_bit_action(hero),
             cc.delayTime(0.7),
-            effect_manager.shot_action(enemy,hero,values),
+            effect_manager.shoot_recoil_action(enemy,hero,values),
             cc.delayTime(0.3),
             effect_manager.step_a_bit_action(hero).reverse()
         );

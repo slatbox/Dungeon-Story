@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:59:38
- * @LastEditTime: 2020-08-29 10:47:16
+ * @LastEditTime: 2020-08-30 18:50:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Iron Sword.js
@@ -21,7 +21,9 @@ cc.Class({
     },
     during_attack: function (hero,enemy,values) {
         var effect_manager = window.Global.effect_manager;
+        
         var original_pos = hero.position;
+        
         var seq = cc.sequence(
             effect_manager.walk_to_enemy_action(enemy),
             cc.delayTime(0.2),

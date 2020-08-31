@@ -139,7 +139,8 @@ const HeroStage = cc.Class({
     {
         var occupation = {"occupation":this.name_label.string};
         DataManager.save_obj(occupation,"occupation");
-        cc.director.loadScene("main_game");
+        DataManager.save_obj({"scene":"main_game"},"to_load");
+        cc.director.loadScene("loading");
     }
 
 

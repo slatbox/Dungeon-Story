@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:49:55
- * @LastEditTime: 2020-08-28 15:58:46
+ * @LastEditTime: 2020-08-31 14:57:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tool.js
@@ -110,9 +110,8 @@ cc.Class({
             LK: this.LK,
             MG: this.MG,
         }; 
-        for(var i = 0 ; i < listeners.length;i++){
-            listeners[i].listen(tem_values,this)
-        }
+        var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
+        fight_stage.broadcast("tool_values",tem_values,this.node);
         
         return tem_values; 
     },

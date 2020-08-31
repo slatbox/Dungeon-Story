@@ -112,6 +112,8 @@ cc.Class({
                 this.results.push(this.spiners[i].result);
             }
             this.node.parent.getComponent("fight_stage").do_spin_result(this.results);
+
+            this.close();
         }
         var seq = cc.sequence(
             cc.callFunc(call0,this),
@@ -130,6 +132,19 @@ cc.Class({
         this.set_spin_button_label("Wait");
         this.current_action = seq;
         this.node.runAction(seq);
+    },
+
+    open:function()
+    {
+        this.spin_button.state = SpinerButtonState.SPIN;
+        this.spin_button.normalColor = this.spin_color;
+        this.set_spin_button_label("Spin");
+    },
+    close:function()
+    {
+        this.spin_button.state = SpinerButtonState.WAIT;
+        this.spin_button.normalColor = this.wait_color;
+        this.set_spin_button_label("Wait");
     },
     init:function(hero,enemy)
     {

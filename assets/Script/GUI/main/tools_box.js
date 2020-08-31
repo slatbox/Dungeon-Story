@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:39:21
- * @LastEditTime: 2020-08-25 20:31:49
+ * @LastEditTime: 2020-08-31 14:49:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\main\tools_box.js
@@ -44,6 +44,14 @@ cc.Class({
         tool_comp.node.removeFromParent(false);
         this.node.addChild(tool_comp.node);
         this.tools[tool_comp.type] = tool_comp;
+    },
+    broadcast:function(event,data,emitter)
+    {
+        for(var i = 0; i < this.tools.length;i++){
+            if(this.tools[i].listen){
+                this.tools[i].listen(event,data,emitter);
+            }
+        }
     },
     onLoad:function()
     {

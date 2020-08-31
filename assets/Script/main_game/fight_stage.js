@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-29 17:55:25
+ * @LastEditTime: 2020-08-31 15:45:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -27,8 +27,10 @@ cc.Class({
            type:EffectManager
        },
        spiner_system:cc.Node,
+       escape_bar:cc.Node,
        hero_hp_bar:cc.Node,
        foe_hp_bar:cc.Node,
+       hero_buff_pool:cc.Node
        
     },
     init:function(hero,enemy,back_room)
@@ -48,6 +50,8 @@ cc.Class({
 
         this.back_room = back_room;
         var spiner_sys = this.spiner_system.getComponent("spiner_sys");
+        this.escape_bar.getComponent("escape_bar").init();
+        this.escaping = false;
         spiner_sys.init(hero,enemy);
         //hide irelative gui
         var mini_map = cc.find("mini_map");
@@ -116,52 +120,95 @@ cc.Class({
         };
         return tem_values;
     },
+    get_final_values:function(actor){
+        var basic_values;
+        basic_values = actor.getComponent("creature").get_combat_values_contribution([]);
+        var tools_comp = cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").tools;
+        if(actor.getComponent("hero")){
+            for(var i = 0 ; i < tools_comp.length;i++){
+                for(var each in basic_values){
+                    basic_values[each] = basic_values[each] + tools_comp[i].get_combat_values_contribution([])[each];
+                }
+            }
+        }
+        return basic_values;
+    },
     compute_values:function()
     {
+        this.hero_buff_pool.getComponent("buff_pool").update_buffs();
+
+        
         var basic_values;
         if(this.doing_result_comp.node.getComponent("tool")){
-            basic_values = this.hero.getComponent("creature").get_combat_values_contribution([]);
+            basic_values = this.get_final_values(this.hero);
             var result_values = this.doing_result_comp.node.getComponent("tool").get_combat_values_contribution([]);
             for (var each_attribute in this.final_data) {
                 this.final_data[each_attribute] = (basic_values[each_attribute] + result_values[each_attribute])*this.multiply;
             }
         }
         else{
-            basic_values = this.enemy.getComponent("creature").get_combat_values_contribution([]);
+            basic_values = this.get_final_values(this.enemy);
             for (var each_attribute in this.final_data) {
                 this.final_data[each_attribute] = basic_values[each_attribute]*this.multiply;
             }
         }
+
+        if(this.doing_result_comp.getComponent("tool")){
+            this.next_phase();
+        }
+        else{
+            this.escape_bar.getComponent("escape_bar").start_slide();
+        }
        
         
     },
-    before_attack:function(hero,enemy)
+    before_attack:function()
+    {
+        this.doing_result_comp.before_attack(this.hero,this.enemy);
+        this.next_phase();
+    },
+    during_attack:function()
+    {
+        this.doing_result_comp.during_attack(this.hero,this.enemy,this.final_data);
+    },
+    after_attack:function()
     {
         
-        this.doing_result_comp.before_attack(hero,enemy);
-    },
-    during_attack:function(hero,enemy)
-    {
-        this.doing_result_comp.during_attack(hero,enemy,this.final_data);
-    },
-    after_attack:function(hero,enemy)
-    {
         var call = function()
         {
-            this.doing_result_comp.after_attack(hero,enemy);
+            this.doing_result_comp.after_attack(this.hero, this.enemy);
 
+            this.spiner_system.getComponent("spiner_sys").open();
             //检测怪兽死亡
-    
-            if(enemy.current_hp <= 0){
+
+            if (this.enemy.current_hp <= 0) {
                 this.exit_stage();
-            }  
+            }
         };
-        this.node.runAction(cc.sequence(cc.delayTime(4),cc.callFunc(call,this)));
+
+        
+        
+        this.node.runAction(cc.sequence(
+            cc.delayTime(1.0),cc.callFunc(call,this)
+        ));
+        
     },
 
+    next_phase:function()
+    {
+        this.phase_state = (this.phase_state + 1) % 4;
+        if(this.phase_state == 0)
+            this.compute_values();
+        else if(this.phase_state == 1)
+            this.before_attack();
+        else if(this.phase_state == 2)
+            this.during_attack();
+        else if(this.phase_state == 3)
+            this.after_attack();
+
+    },
     do_spin_result:function(results)
     {
-        
         var result_comp = results[0].corre_function_comp;
         if(!result_comp){
             return;
@@ -182,14 +229,22 @@ cc.Class({
             LK: 0,
             MG: 0
         };
+
+        //init listeners 
+        
+        
+        
         
         if(!this.doing_result_comp){
             return;
         }
-        this.compute_values();
-        this.before_attack(this.hero,this.enemy);
-        this.during_attack(this.hero,this.enemy);
-        this.after_attack(this.hero,this.enemy);
+        this.phase_state = 3;
+        this.next_phase();
     },
+    broadcast:function(event,data,emitter){
+        this.hero_buff_pool.getComponent("buff_pool").broadcast(event,data,emitter);
+        cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").broadcast(event,data,emitter);
+    }
+    
     
 });

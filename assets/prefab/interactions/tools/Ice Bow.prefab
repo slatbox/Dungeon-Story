@@ -118,6 +118,12 @@
     "_enabled": true,
     "type": 0,
     "description": "This is as tool",
+    "HP": 0,
+    "AT": 0,
+    "DF": 0,
+    "SP": 0,
+    "LK": 0,
+    "MG": 0,
     "_id": ""
   },
   {
@@ -126,7 +132,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "97c61270-e63d-4b81-aef4-a85ecb6c88e5"
     },
     "fileId": "383qyd5nZFHqHmmiKvmUo/",
     "sync": false

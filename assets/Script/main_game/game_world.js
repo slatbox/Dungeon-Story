@@ -211,8 +211,7 @@ const GameWorld = cc.Class({
         this.current_room.active = true;
         this.current_pos = new cc.Vec2(rand_i,rand_j);
 
-       
-
+    
     },
     deal_with_touch:function(event_pos)
     {
@@ -298,7 +297,7 @@ const GameWorld = cc.Class({
     {
         this.init_rooms();
         this.object_manager.init_hero(this)
-        cc.audioEngine.playMusic(this.game_BGM);
+        cc.audioEngine.playMusic(this.game_BGM,true);
     },
 
     
