@@ -213,7 +213,7 @@
       "array": [
         0,
         1.892,
-        341.67397895626516,
+        340.39570378712557,
         0,
         0,
         0,
@@ -1359,7 +1359,7 @@
         "__id__": 143
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 162
@@ -4483,7 +4483,7 @@
     },
     "component": "",
     "_componentId": "8221djPK6lCUbgsFIawSmTJ",
-    "handler": "spin_button_interface",
+    "handler": "gameble_button_interface",
     "customEventData": ""
   },
   {
@@ -5153,6 +5153,9 @@
     "asis_tool_chance": 0.3,
     "spin_button": {
       "__id__": 88
+    },
+    "gameble_button": {
+      "__id__": 97
     },
     "spin_color": {
       "__type__": "cc.Color",
@@ -6870,7 +6873,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -11658,7 +11661,7 @@
       "__id__": 264
     },
     "label": "AT",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -12478,7 +12481,7 @@
       "__id__": 285
     },
     "label": "DF",
-    "max": 10,
+    "max": 100,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -13298,7 +13301,7 @@
       "__id__": 306
     },
     "label": "MG",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -14118,7 +14121,7 @@
       "__id__": 327
     },
     "label": "LK",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -14938,7 +14941,7 @@
       "__id__": 348
     },
     "label": "SP",
-    "max": 10,
+    "max": 50,
     "bar_gap": 0,
     "color": {
       "__type__": "cc.Color",
@@ -14987,6 +14990,7 @@
     "LK": {
       "__id__": 329
     },
+    "inialized": false,
     "_id": "9cE6xjtfxMU5GkTUbMv69K"
   },
   {

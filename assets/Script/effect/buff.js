@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-31 09:47:40
- * @LastEditTime: 2020-08-31 11:52:43
+ * @LastEditTime: 2020-09-06 15:33:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\effect\buff.js
@@ -18,6 +18,15 @@ cc.Class({
 
     properties: {
        label:cc.Label
+    },
+    set_label:function(value){
+        this.label.string = String(value);
+    },
+    update_time_label:function()
+    {
+        if(this.node.max_time){
+            this.set_label(this.node.max_time - this.node.time);
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:

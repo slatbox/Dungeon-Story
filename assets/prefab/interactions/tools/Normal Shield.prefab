@@ -120,7 +120,7 @@
     },
     "_enabled": true,
     "type": 1,
-    "description": "This is as tool",
+    "description": "A wooden shield.Every time you spin this shield you get a shield buff of once immunity for next attack ",
     "HP": 0,
     "AT": 0,
     "DF": 0,

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-30 16:37:22
- * @LastEditTime: 2020-08-30 19:24:57
+ * @LastEditTime: 2020-09-06 11:05:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\actors\enemys\red_bat.js
@@ -41,6 +41,14 @@ cc.Class({
     after_attack: function (hero,enemy) {
     
     },
+
+    listen:function(event,data,emitter){
+        if(event == "hero_get_harm"){
+            var value = data.value;
+            var effect_manager = window.Global.effect_manager;
+            effect_manager.add_hp_to(this.node,-0.5 * value);
+        }
+    }
 
     // update (dt) {},
 });

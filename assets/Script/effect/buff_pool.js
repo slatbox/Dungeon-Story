@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-31 10:02:08
- * @LastEditTime: 2020-08-31 15:56:21
+ * @LastEditTime: 2020-09-06 15:37:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\effect\buff_pool.js
@@ -22,9 +22,13 @@ cc.Class({
     {
         for(var i = 0 ; i < this.buffs.length;i++){
             this.buffs[i].time += 1;
+            
             if(this.buffs[i].is_out_of_date()){
                 this.buffs[i].destroy();
                 delete this.buffs[i];
+            }
+            if(this.buffs[i]){
+                this.buffs[i].getComponent("buff").update_time_label();
             }
         }
         var tem = [];
@@ -52,6 +56,14 @@ cc.Class({
                 this.buffs[i].listen(event,data,emitter);
             }
         }
+    },
+    has_a_buff:function(buff_name){
+        for(var i = 0 ; i < this.buffs.length;i++){
+            if(this.buffs[i].name == buff_name){
+                return true;
+            }
+        }
+        return false;
     },
     onLoad:function()
     {

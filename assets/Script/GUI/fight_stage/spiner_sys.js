@@ -12,6 +12,10 @@ const SpinerButtonState = cc.Enum({
     RESPIN:2,
     WAIT:3
 });
+const GamebleButtonState = cc.Enum({
+    OPEN:0,
+    WAIT:1
+});
 
 cc.Class({
     extends: cc.Component,
@@ -26,6 +30,7 @@ cc.Class({
         arm_chance:0.7,
         asis_tool_chance:0.3,
         spin_button:cc.Button,
+        gameble_button:cc.Button,
         spin_color:cc.Color,
         stop_color:cc.Color,
         respin_color:cc.Color,
@@ -50,6 +55,16 @@ cc.Class({
         }
         
     },
+    gameble_button_interface:function()
+    {
+        if(this.gameble_button.state == GamebleButtonState.OPEN){
+            this.gameble();
+            this.gameble_button.state = GamebleButtonState.WAIT;
+            this.gameble_button.normalColor = this.wait_color;
+            var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+            button_label.getComponent(cc.Label).string = "Wait";
+        }
+    },
     gameble:function()
     {
         if(this.hero.getComponent("hero").gold >= 5){
@@ -60,13 +75,20 @@ cc.Class({
     },
     start_spin:function()
     {
-        this.multiply = 1;
+        if(!this.multiply){
+            this.multiply = 1;
+        }
         for(var i = 0 ; i < this.spiners.length;i++){
             this.spiners[i].start_spin();   
         }
         this.spin_button.state = SpinerButtonState.STOP;
         this.spin_button.normalColor = this.stop_color;
         this.set_spin_button_label("Stop");
+
+        this.gameble_button.state = GamebleButtonState.WAIT;
+        this.gameble_button.normalColor = this.wait_color;
+        var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+        button_label.getComponent(cc.Label).string = "Wait";
         
     },
     respin:function()
@@ -104,6 +126,11 @@ cc.Class({
             this.spin_button.state = SpinerButtonState.SPIN;
             this.spin_button.normalColor = this.spin_color;
             this.set_spin_button_label("Spin");
+
+            this.gameble_button.state = GamebleButtonState.OPEN;
+            this.gameble_button.normalColor = this.respin_color;
+            var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+            button_label.getComponent(cc.Label).string = "Gamble\n$5";
         };
         var do_spin_result = function(){
             
@@ -171,6 +198,7 @@ cc.Class({
     start:function()
     {
         this.spin_button.state = SpinerButtonState.SPIN;
+        this.gameble_button.state = GamebleButtonState.OPEN;
         this.spin_button.normalColor = this.spin_color;
         
     },

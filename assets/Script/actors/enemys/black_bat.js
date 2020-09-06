@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-30 16:37:22
- * @LastEditTime: 2020-08-30 19:22:53
+ * @LastEditTime: 2020-09-06 10:57:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\actors\enemys\black_bat.js
@@ -15,11 +15,7 @@
 
 cc.Class({
     extends: cc.Component,
-
-    properties: {
-        
-    },
-
+    properties: {},
     before_attack: function (hero,enemy) {
         
     },
@@ -37,6 +33,11 @@ cc.Class({
     after_attack: function (hero,enemy) {
     
     },
-
-    // update (dt) {},
+    listen:function(event,data,emitter){
+        if(event == "hero_get_harm"){
+            var value = data.value;
+            var effect_manager = window.Global.effect_manager;
+            effect_manager.add_hp_to(this.node,-0.5 * value);
+        }
+    }
 });

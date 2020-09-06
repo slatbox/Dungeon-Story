@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "green_goblin_wizard",
+    "_name": "Normal Short Dagger",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -27,13 +27,10 @@
       },
       {
         "__id__": 4
-      },
-      {
-        "__id__": 5
       }
     ],
     "_prefab": {
-      "__id__": 6
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -45,20 +42,20 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 68,
-      "height": 64
+      "width": 41,
+      "height": 41
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0
+      "y": 0.5
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        384,
-        279,
+        496,
+        335,
         0,
         0,
         0,
@@ -98,7 +95,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "d44e5de6-247b-4c4e-8cf0-d7885a7ae797"
+      "__uuid__": "39b2f992-1e93-42f0-a9e8-62e4970f9e6d"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -115,58 +112,32 @@
     "_id": ""
   },
   {
-    "__type__": "cc.Animation",
+    "__type__": "17f6bO7HrhGUan1K+dnr4ZH",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "_defaultClip": {
-      "__uuid__": "fa754809-eb2a-4b16-9d8b-e56fd5a80cac"
-    },
-    "_clips": [
-      {
-        "__uuid__": "fa754809-eb2a-4b16-9d8b-e56fd5a80cac"
-      }
-    ],
-    "playOnLoad": true,
+    "type": 1,
+    "description": "A normal short dagger.if you spin this kind of tool consecutively,you will get a multiple AT effet.",
+    "HP": 0,
+    "AT": 0,
+    "DF": 0,
+    "SP": 0,
+    "LK": 0,
+    "MG": 0,
     "_id": ""
   },
   {
-    "__type__": "73fc2YIZN5Mhrl6cD6ctAO0",
+    "__type__": "087a5UfNMJDNrWGgwGbqw24",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "HP": 31,
-    "AT": 5,
-    "DF": 9,
-    "SP": 10,
-    "LK": 10,
-    "MG": 10,
-    "_id": ""
-  },
-  {
-    "__type__": "220dfTMSPxJTJ25gkKTF9aY",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "effect_color": {
-      "__type__": "cc.Color",
-      "r": 24,
-      "g": 81,
-      "b": 169,
-      "a": 255
-    },
-    "buff_sprite_frame": {
-      "__uuid__": "5e83d7a7-9144-4e96-85dd-c417d1485016"
-    },
+    "commbo": 0,
     "_id": ""
   },
   {
@@ -175,9 +146,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "01ac9dad-aa41-4b34-a7b8-5af9f8388a9c"
+      "__uuid__": "9058c19c-ba2e-4fc1-91f4-616e1ac2fac5"
     },
-    "fileId": "f15FPNuydLObAtJ7QPiSQB",
+    "fileId": "f73awZBCZN1rXep+H9g7xZ",
     "sync": false
   }
 ]

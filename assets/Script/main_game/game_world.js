@@ -47,112 +47,94 @@ const GameWorld = cc.Class({
       }  
       return -1;
     },
-    init_walls_between_rooms:function()
-    {
+    init_walls_between_rooms: function () {
         this.rooms_map = [];
+        //set virtual wall marks
         var walls = [];
-        for(var i = 0; i < 5;i++)
-        {
+        for (var i = 0; i < 5; i++) {
             walls[i] = [];
-            for(var j = 0 ; j < 5; j++)
-            {
+            for (var j = 0; j < 5; j++) {
                 walls[i][j] = 0;
             }
         }
-        for(var i = 1 ; i <= 3;i+=2)
-        {
-            
-            for(var j = 0 ; j < 5;j++)
-            {
+        for (var i = 1; i <= 3; i += 2) {
+
+            for (var j = 0; j < 5; j++) {
                 walls[i][j] = 1;
             }
         }
-        for(var i = 0 ; i < 5;i++)
-        {
-            for(var j = 1; j <= 3;j+=2)
-            {
+        for (var i = 0; i < 5; i++) {
+            for (var j = 1; j <= 3; j += 2) {
                 walls[i][j] = 1;
             }
         }
+        //save all connected branches
+
         this.paths = [];
         var path_counter = 9;
         var pos = 0;
-        for(var i = 0;i <= 4;i+=2)
-        {
-            for(var j = 0;j<=4;j+=2)
-            {
+        for (var i = 0; i <= 4; i += 2) {
+            for (var j = 0; j <= 4; j += 2) {
                 this.paths[pos] = new Set;
-                this.paths[pos++].add_element(new cc.Vec2(i,j)); 
+                this.paths[pos++].add_element(new cc.Vec2(i, j));
             }
         }
-        while(path_counter > 1)
-        {
-            // var all = [new cc.Vec2(1,2),new cc.Vec2(2,1),new cc.Vec2(2,3),new cc.Vec2(3,2)];
+        //remove walls until left one branch
+        while (path_counter > 1) {
             var real_walls = [];
             var num_of_walls = 0;
-            for(var i = 0;i < 5;i+=2)
-            {
-                for(var j = 1;j <= 3;j+=2)
-                {
-                    if(walls[i][j] == 1)
-                    {
-                        real_walls[num_of_walls++] = new cc.Vec2(i,j);
+            for (var i = 0; i < 5; i += 2) {
+                for (var j = 1; j <= 3; j += 2) {
+                    if (walls[i][j] == 1) {
+                        real_walls[num_of_walls++] = new cc.Vec2(i, j);
                     }
                 }
             }
-            for(var i = 1;i<=3;i+=2)
-            {
-                for(var j = 0;j < 5;j+=2)
-                {
-                    if(walls[i][j] == 1)
-                    {
-                        real_walls[num_of_walls++] = new cc.Vec2(i,j);
+            for (var i = 1; i <= 3; i += 2) {
+                for (var j = 0; j < 5; j += 2) {
+                    if (walls[i][j] == 1) {
+                        real_walls[num_of_walls++] = new cc.Vec2(i, j);
                     }
                 }
             }
-
             var rand = Math.floor(Math.random() * real_walls.length);
             var rand_wall = real_walls[rand];
             var rand_i = rand_wall.x;
             var rand_j = rand_wall.y;
-            if(rand_j%2  != 0)//左右墙
-            {
-                var left_point = this.search_path(new cc.Vec2(rand_i,rand_j-1));
+            if (rand_j % 2 != 0) {
+                var left_point = this.search_path(new cc.Vec2(rand_i, rand_j - 1));
                 var left_path = this.paths[left_point];
-                var is_same = left_path.has_element(new cc.Vec2(rand_i,rand_j+1));
+                var is_same = left_path.has_element(new cc.Vec2(rand_i, rand_j + 1));
                 if (!is_same) {
-                    
-                   var right_point = this.search_path(new cc.Vec2(rand_i,rand_j+1));
-                   var right_path = this.paths[right_point];
-                   for(var i = 0 ; i < right_path.elements.length;i++)
-                   {
-                       left_path.add_element(right_path.elements[i]);
-                   }
-                   this.paths[right_point] = null;
+
+                    var right_point = this.search_path(new cc.Vec2(rand_i, rand_j + 1));
+                    var right_path = this.paths[right_point];
+                    for (var i = 0; i < right_path.elements.length; i++) {
+                        left_path.add_element(right_path.elements[i]);
+                    }
+                    this.paths[right_point] = null;
                     walls[rand_i][rand_j] = 0;
                     path_counter--;
                 }
             }
-            else
+            else //
             {
-                var up_point = this.search_path(new cc.Vec2(rand_i-1,rand_j));
-                var down_point = this.search_path(new cc.Vec2(rand_i+1,rand_j));
+                var up_point = this.search_path(new cc.Vec2(rand_i - 1, rand_j));
+                var down_point = this.search_path(new cc.Vec2(rand_i + 1, rand_j));
                 var up_path = this.paths[up_point];
-                var is_same = up_path.has_element(new cc.Vec2(rand_i+1,rand_j));
+                var is_same = up_path.has_element(new cc.Vec2(rand_i + 1, rand_j));
                 if (!is_same) {
                     var down_path = this.paths[down_point];
-                    for(var i = 0 ; i < down_path.elements.length;i++)
-                    {
-                       up_path.add_element(down_path.elements[i]);
+                    for (var i = 0; i < down_path.elements.length; i++) {
+                        up_path.add_element(down_path.elements[i]);
                     }
-                   this.paths[down_point] = null;
+                    this.paths[down_point] = null;
                     walls[rand_i][rand_j] = 0;
                     path_counter--;
                 }
             }
         }
         this.walls = walls;
-        cc.log(this.walls);
     },
     is_room:function(i,j)
     {

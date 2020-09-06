@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-07-12 17:07:41
+ * @LastEditTime: 2020-09-01 17:15:54
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\GUI\start_menu\hero_description.js
+ */
 // Learn cc.Class:
 //  - https://docs.cocos.com/creator/manual/en/scripting/class.html
 // Learn Attribute:
@@ -37,23 +45,28 @@ const HeroDescription = cc.Class({
             default:null,
             type:AbilityRow
         },
+        inialized:false
+        
     },
-    set_description:function(hero)
+    set_description:function(data)
     {
-        var creature = hero.getComponent("creature");
-        var hp = creature.HP;
-        var df = creature.DF;
-        var at = creature.AT;
-        var mg = creature.MG;
-        var sp = creature.SP;
-        var lk = creature.LK;
-        this.HP.set_level(hp);
-        this.DF.set_level(df);
-        this.AT.set_level(at);
-        this.MG.set_level(mg);
-        this.SP.set_level(sp);
-        this.LK.set_level(lk);
+        // this.HP.max = max_levels.HP;
+        // this.DF.max = max_levels.DF;
+        // this.AT.max = max_levels.AT;
+        // this.MG.max = max_levels.MG;
+        // this.SP.max = max_levels.SP;
+        // this.LK.max = max_levels.LK;
+        
+        this.HP.set_level(data.HP);
+        this.DF.set_level(data.DF);
+        this.AT.set_level(data.AT);
+        this.MG.set_level(data.MG);
+        this.SP.set_level(data.SP);
+        this.LK.set_level(data.LK);
     },
+    set_max_of:function(label,max){
+        this[label].max = max;
+    }
 });
 
 module.exports = HeroDescription;

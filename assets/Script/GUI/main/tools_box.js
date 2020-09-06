@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:39:21
- * @LastEditTime: 2020-08-31 14:49:18
+ * @LastEditTime: 2020-09-06 12:56:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\GUI\main\tools_box.js
@@ -35,21 +35,34 @@ cc.Class({
         if(!this.tools){
             this.tools = [];
         }
-        if (this.tools[tool_comp.type]) {
-            var old_tool = this.tools[tool_comp.type]; 
-            old_tool.drop_back_to_room(tool_comp.node.pos,this);
+        var final_position = tool_comp.type;
+        
+        if (this.tools[tool_comp.type] ) {
+            if(tool_comp.type == ToolTypes.arm_asis){
+                final_position = ToolTypes.arm_main;
+                if(this.tools[ToolTypes.arm_main]){
+                    var old_tool = this.tools[ToolTypes.arm_main];
+                    old_tool.drop_back_to_room(tool_comp.node.pos, this);
+                }
+            }
+            else{
+                var old_tool = this.tools[tool_comp.type];
+                old_tool.drop_back_to_room(tool_comp.node.pos, this);
+            }
+            
         }
         this.convert_to_button(tool_comp);
-        tool_comp.node.position = new cc.Vec2(this.table_pos1.x + tool_comp.node.width * 1.2 * tool_comp.type, this.table_pos1.y);
+        tool_comp.node.position = new cc.Vec2(this.table_pos1.x + tool_comp.node.width * 1.2 * final_position, this.table_pos1.y);
         tool_comp.node.removeFromParent(false);
         this.node.addChild(tool_comp.node);
-        this.tools[tool_comp.type] = tool_comp;
+        this.tools[final_position] = tool_comp;
     },
     broadcast:function(event,data,emitter)
     {
         for(var i = 0; i < this.tools.length;i++){
-            if(this.tools[i].listen){
-                this.tools[i].listen(event,data,emitter);
+            var tool_specific_comp = this.tools[i].node.getComponent(this.tools[i].node.name);
+            if(tool_specific_comp.listen){
+                tool_specific_comp.listen(event,data,emitter);
             }
         }
     },

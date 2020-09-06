@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-28 23:32:30
- * @LastEditTime: 2020-08-31 15:56:47
+ * @LastEditTime: 2020-09-06 11:12:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Shield.js
@@ -13,13 +13,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-cc.Class({
+const NormalIronSword  = cc.Class({
     extends: cc.Component,
 
     properties: {
         
     },
-
+    
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
@@ -43,6 +43,7 @@ cc.Class({
         hero.parent.addChild(shield_icon);
         //create buff
         var buff = effect_manager.create_buff(this.node.getComponent(cc.Sprite).spriteFrame,hero,enemy);
+        buff.shield_icon = this.node.getComponent(cc.Sprite).spriteFrame;
         buff.name = "shield";
         buff.usage_time = 1;
         buff.is_out_of_date = function()
@@ -54,14 +55,16 @@ cc.Class({
         };
         buff.listen = function(event,data,emitter)
         {
-            if(event == "hero_basic_values"){
-                data.DF *= 2;
+            if(data.normal_shield_processed){
+                return;
             }
             if(event == "hero_get_harm"){
                 this.usage_time = 0;
+                data.value = 0;
+                data.normal_shield_processed = 1;
             }
         };
-        hero_buff_pool.add_buff(buff);
+        hero_buff_pool.add_buff(buff); 
 
         var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
         fight_stage.next_phase();

@@ -319,21 +319,44 @@ const EffectManager = cc.Class({
         var k5 = 300;
         var enemy_df = stage.getComponent("fight_stage").get_final_values(enemy).DF;
 
-        var hp_change =  - Math.floor(values.AT*(1 - k3 * enemy_df/(enemy_df + k5)));
+        var hp_change =  {"value":- Math.floor(values.AT*(1 - k3 * enemy_df/(enemy_df + k5)))};
+
+        
         if(enemy.current_hp){
-            enemy.current_hp += hp_change;
+            fight_stage.broadcast("enemy_get_harm",hp_change,this);
+            enemy.current_hp += hp_change.value;
             enemy.current_hp = enemy.current_hp < 0 ? 0 : enemy.current_hp;
 
             enemy_hp_bar.set_level(enemy.current_hp);
         }
         else{
-            enemy.getComponent("hero").current_hp += hp_change;
-            enemy.getComponent("hero").current_hp = enemy.getComponent("hero").current_hp < 0 ? 0 : enemy.getComponent("hero").current_hp;
+            fight_stage.broadcast("hero_get_harm",hp_change,this);
+            var current_hp = enemy.getComponent("hero").current_hp;
+            enemy.getComponent("hero").set_value("current_hp",(current_hp + hp_change.value) < 0 ? 0 : (current_hp + hp_change.value));
             hero_hp_bar.set_level(enemy.getComponent("hero").current_hp);
             
-            fight_stage.broadcast("hero_get_harm",0,this);
+            
         }
         
+    },
+    add_hp_to:function(actor,value){
+        var hero_hp_bar = cc.find("Canvas/fight_stage/hero_hp_bar").getComponent("ability_row");
+        var enemy_hp_bar = cc.find("Canvas/fight_stage/foe_hp_bar").getComponent("ability_row");
+        var actor_max_hp = actor.getComponent("creature").HP;
+        if(actor.getComponent("hero")){
+            var hero_comp = actor.getComponent("hero");
+            var final_value = hero_comp+value > actor_max_hp ? actor_max_hp : hero_comp + value;
+            actor.getComponent("hero").set_value("current_hp",final_value);
+
+            hero_hp_bar.set_level(actor.getComponent("hero").current_hp);
+        }
+        else{
+            
+            var final_value = actor.current_hp + value > actor_max_hp ? actor_max_hp : actor.current_hp + value;
+            actor.current_hp  = final_value;
+            enemy_hp_bar.set_level(actor.current_hp);
+
+        }
     },
     do_harm_to_action:function(enemy,effect_action,values)
     {
@@ -369,6 +392,7 @@ const EffectManager = cc.Class({
 
         return seq;
     },
+
     walk_back_action:function(original_pos){
         var seq =cc.jumpTo(0.7,original_pos,10,3);
         
@@ -424,7 +448,16 @@ const EffectManager = cc.Class({
         }
         return seq;
     },
-    
+    get_ill_state_action:function(color)
+    {
+        var seq = cc.repeatForever(
+            cc.sequence(
+                cc.tintTo(1.0,color.r,color.g,color.b),
+                cc.tintTo(1.0,255,255,255)
+            )
+        );
+        return seq;
+    },
     shoot_recoil_action:function(shooter,enemy,values){
 
         var direction = cc.repeatForever(cc.moveBy(0.1,-170,0));

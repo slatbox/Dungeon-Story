@@ -1,12 +1,21 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:59:38
- * @LastEditTime: 2020-08-30 18:50:01
+ * @LastEditTime: 2020-09-06 11:26:47
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Iron Sword.js
+ */
+/*
+ * @Author: your name
+ * @Date: 2020-08-22 16:59:38
+ * @LastEditTime: 2020-09-06 11:21:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tools\Normal Iron Sword.js
  */
 
+ 
 
 
 cc.Class({
@@ -15,7 +24,9 @@ cc.Class({
     properties: {
         
     },
+    statics: {
 
+    },
     before_attack: function (hero,enemy) {
         
     },

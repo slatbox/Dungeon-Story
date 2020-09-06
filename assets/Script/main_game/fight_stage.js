@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-26 19:23:35
- * @LastEditTime: 2020-08-31 18:27:46
+ * @LastEditTime: 2020-09-06 15:08:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\main_game\fight_stage.js
@@ -92,6 +92,7 @@ cc.Class({
         BasicInfomation.active = true;
         this.spiner_system.getComponent("spiner_sys").clear();
         // menu.runAction(cc.moveTo(0.2,menu.original_pos));
+        this.hero_buff_pool.getComponent("buff_pool").clear();
     },
     onEnable:function()
     {
@@ -167,6 +168,7 @@ cc.Class({
     },
     before_attack:function()
     {
+        this.broadcast("before_attack",{},this);
         this.doing_result_comp.before_attack(this.hero,this.enemy);
         this.next_phase();
     },
@@ -186,6 +188,7 @@ cc.Class({
 
             if (this.enemy.current_hp <= 0) {
                 this.exit_stage();
+                this.broadcast("game_over",null,this);
             }
         };
 
@@ -196,7 +199,14 @@ cc.Class({
         ));
         
     },
-
+    is_hero_attacking:function()
+    {
+        if(this.doing_result_comp.node.getComponent("tool")){
+            return true;
+        }
+        else
+            return false;
+    },
     next_phase:function()
     {
         this.phase_state = (this.phase_state + 1) % 4;
@@ -208,8 +218,8 @@ cc.Class({
             this.during_attack();
         else if(this.phase_state == 3)
             this.after_attack();
-
     },
+    
     do_spin_result:function(results)
     {
         var result_comp = results[0].corre_function_comp;
@@ -223,6 +233,7 @@ cc.Class({
                 multiply += 1;
         }
         this.doing_result_comp = result_comp.getComponent(result_comp.node.name);
+        var tem = this.spiner_system.getComponent("spiner_sys");
         this.multiply = multiply * this.spiner_system.getComponent("spiner_sys").multiply;
         this.final_data = {
             HP: 0,
@@ -247,6 +258,9 @@ cc.Class({
     broadcast:function(event,data,emitter){
         this.hero_buff_pool.getComponent("buff_pool").broadcast(event,data,emitter);
         cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").broadcast(event,data,emitter);
+        if(this.enemy.getComponent(this.enemy.name).listen){
+            this.enemy.getComponent(this.enemy.name).listen(event,data,emitter);
+        }
     }
     
     
