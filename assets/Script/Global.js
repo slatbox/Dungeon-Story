@@ -12,5 +12,6 @@ window.Global = {
     TileWidth:72,
     tools_box_comp:null,
     hero_comp:null,
-    effect_manager:null
+    effect_manager:null,
+    notice_label:null
 };

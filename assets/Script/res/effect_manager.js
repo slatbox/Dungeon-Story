@@ -15,6 +15,7 @@ const EffectManager = cc.Class({
         arrow:cc.Prefab,
         gray_book:cc.Prefab,
         air_ball:cc.Prefab,
+        game_label:cc.Prefab,
         chop_light_small_left:cc.SpriteFrame,
         chop_light_small_right:cc.SpriteFrame,
         chop_light_big_left:cc.SpriteFrame,
@@ -22,7 +23,8 @@ const EffectManager = cc.Class({
         scratch_big_sp:cc.SpriteFrame,
         scratch_small_sp:cc.SpriteFrame,
         bump_small_sp:cc.SpriteFrame,
-
+        big_chop_default_sound:cc.AudioClip,
+        small_chop_default_sound:cc.AudioClip
     },
     
     explode_gray:function()
@@ -40,6 +42,11 @@ const EffectManager = cc.Class({
         var random_bias_x = Math.floor(Math.random() * (max_bias - min_bias + 1)) + min_bias;
         var random_bias_y = Math.floor(Math.random() * (max_bias - min_bias + 1)) + min_bias;
         return new cc.Vec2(random_bias_x,random_bias_y);
+    },
+    create_label:function(){
+        var label = cc.instantiate(this.game_label);
+        return label;
+
     },
     big_chop_action:function(enemy)
     {
@@ -309,6 +316,7 @@ const EffectManager = cc.Class({
         var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
         var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
         var stage = cc.find("Canvas/fight_stage");
+
         stage.getComponent("fight_stage").next_phase();
 
         if(escape_bar.getComponent("escape_bar").miss){
@@ -328,6 +336,7 @@ const EffectManager = cc.Class({
             enemy.current_hp = enemy.current_hp < 0 ? 0 : enemy.current_hp;
 
             enemy_hp_bar.set_level(enemy.current_hp);
+            
         }
         else{
             fight_stage.broadcast("hero_get_harm",hp_change,this);
@@ -358,10 +367,15 @@ const EffectManager = cc.Class({
 
         }
     },
-    do_harm_to_action:function(enemy,effect_action,values)
+    do_harm_to_action:function(enemy,effect_action,values,sound_effect = "big_chop_default_sound")
     {
         var act = cc.jumpBy(0.15,enemy.width,0,15,1);
-
+        var sound_clip;
+        if(typeof(sound_effect) == "string")
+            sound_clip = this[sound_effect];
+        else
+            sound_clip = sound_effect;
+        
         var escape_bar = cc.find("Canvas/fight_stage/escape_sys/escape_bar");
         if(enemy.getComponent("hero")){
             act = act.reverse();
@@ -372,7 +386,9 @@ const EffectManager = cc.Class({
                 enemy.runAction(this.get_harm_action());
                 if(!escape_bar.getComponent("escape_bar").miss){
                     enemy.runAction(effect_action);
+                    cc.audioEngine.playEffect(sound_clip,false);
                 }
+                
                 this.allocate_harm_value(enemy,values);
             },this),
             

@@ -35,7 +35,8 @@ cc.Class({
         stop_color:cc.Color,
         respin_color:cc.Color,
         wait_color:cc.Color,
-        glod_label:cc.Label
+        glod_label:cc.Label,
+        spin_sound:cc.AudioClip
     },
     set_spin_button_label:function(string)
     {
@@ -89,7 +90,8 @@ cc.Class({
         this.gameble_button.normalColor = this.wait_color;
         var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
         button_label.getComponent(cc.Label).string = "Wait";
-        
+
+        cc.audioEngine.playEffect(this.spin_sound,false);
     },
     respin:function()
     {

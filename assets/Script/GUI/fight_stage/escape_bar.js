@@ -31,7 +31,10 @@ cc.Class({
         stop_button_color:cc.Color,
         escape_bar:cc.Node,
         moving_time:1,
-        default_escape_width:40
+        default_escape_width:40,
+        notice_label:cc.Node,
+        failed_sound:cc.AudioClip,
+        succeed_sound:cc.AudioClip
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -96,10 +99,19 @@ cc.Class({
         this.control_button.normalColor = this.start_button_color;
         this.button_label.string = "Wait";
         this.miss = this.is_in_escape_bar();
-
+        var message = "Falied";
+        var color = cc.Color.RED;
+        var sound = this.failed_sound;
+        if(this.miss){
+            message = "Succeed!";
+            color = cc.Color.GREEN;
+           sound = this.succeed_sound;
+        } 
+        cc.audioEngine.playEffect(sound,false);
+        this.notice_label.getComponent("notice_label").show(message,color);
         var fight_state = cc.find("Canvas/fight_stage");
         fight_state.getComponent("fight_stage").next_phase();
-        
+
     },
     update:function(dt)
     {

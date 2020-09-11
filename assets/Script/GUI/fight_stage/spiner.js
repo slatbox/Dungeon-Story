@@ -18,7 +18,8 @@ const Spiner = cc.Class({
         bad_luck_icon:cc.SpriteFrame,
         spin_time:0.5,
         spin_gap: 50,
-        trigger_time:1
+        trigger_time:1,
+        stop_sound:cc.AudioClip
     },
     create_random_icon:function()
     {
@@ -178,6 +179,7 @@ const Spiner = cc.Class({
             this.up_icon.runAction(m2);
             this.down_icon.runAction(m3);
             this.is_spining = false;
+            cc.audioEngine.playEffect(this.stop_sound,false);
         };
         var seq = cc.sequence(
             cc.delayTime(this.trigger_time),

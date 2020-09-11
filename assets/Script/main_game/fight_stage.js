@@ -30,29 +30,34 @@ cc.Class({
        escape_bar:cc.Node,
        hero_hp_bar:cc.Node,
        foe_hp_bar:cc.Node,
-       hero_buff_pool:cc.Node
+       hero_buff_pool:cc.Node,
+       notice_label:cc.Node
        
     },
     init:function(hero,enemy,back_room)
     {
-        this.enemy = enemy;
+        //init hero
         this.hero = hero;
-        this.enemy.parent = this.node;
         this.hero.parent = this.node;
         this.hero.x = -this.actor_gap/2;
         this.hero.y = this.back_ground.y-this.actor_dis;
+        this.hero.runAction(cc.flipX(true));
+        
+
+        this.enemy = enemy;
+        this.enemy.parent = this.node;
         this.enemy.x = this.actor_gap/2;
         this.enemy.y = this.back_ground.y-this.actor_dis;
-        
         this.enemy.current_hp = this.enemy.getComponent("creature").HP;
         
-        this.hero.runAction(cc.flipX(true));
-
+        
+        //int ui
         this.back_room = back_room;
         var spiner_sys = this.spiner_system.getComponent("spiner_sys");
         this.escape_bar.getComponent("escape_bar").init();
         this.escaping = false;
         spiner_sys.init(hero,enemy);
+
         //hide irelative gui
         var mini_map = cc.find("mini_map");
         var BasicInfomation = cc.find("BasicInfomation");
@@ -219,7 +224,16 @@ cc.Class({
         else if(this.phase_state == 3)
             this.after_attack();
     },
-    
+    show_hero_notice_label:function(message,color){
+        var label_pos = new cc.Vec2(this.hero.x,this.hero.y + this.hero.height + 30);
+        var label = this.effect_manager.create_label();
+        label.position = label_pos;
+        this.node.addChild(label);
+        label.getComponent(cc.Label).fontSize = 25;
+        label.getComponent("notice_label").show(message,color);
+        var action = cc.sequence(cc.delayTime(3.0),cc.removeSelf());
+        label.runAction(action);
+    },
     do_spin_result:function(results)
     {
         var result_comp = results[0].corre_function_comp;
@@ -235,6 +249,16 @@ cc.Class({
         this.doing_result_comp = result_comp.getComponent(result_comp.node.name);
         var tem = this.spiner_system.getComponent("spiner_sys");
         this.multiply = multiply * this.spiner_system.getComponent("spiner_sys").multiply;
+        var color = cc.Color.WHITE;
+        if(this.multiply == 2){
+            color = cc.Color.MAGENTA;
+        }
+        else if(this.multiply == 3){
+            color = cc.Color.RED;
+        }
+        
+        this.notice_label.getComponent("notice_label").show(String(this.multiply) + "multiple",color);
+
         this.final_data = {
             HP: 0,
             AT: 0,
