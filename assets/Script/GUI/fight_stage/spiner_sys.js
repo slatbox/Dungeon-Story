@@ -12,6 +12,10 @@ const SpinerButtonState = cc.Enum({
     RESPIN:2,
     WAIT:3
 });
+const GamebleButtonState = cc.Enum({
+    OPEN:0,
+    WAIT:1
+});
 
 cc.Class({
     extends: cc.Component,
@@ -26,10 +30,13 @@ cc.Class({
         arm_chance:0.7,
         asis_tool_chance:0.3,
         spin_button:cc.Button,
+        gameble_button:cc.Button,
         spin_color:cc.Color,
         stop_color:cc.Color,
         respin_color:cc.Color,
-        wait_color:cc.Color
+        wait_color:cc.Color,
+        glod_label:cc.Label,
+        spin_sound:cc.AudioClip
     },
     set_spin_button_label:function(string)
     {
@@ -49,25 +56,57 @@ cc.Class({
         }
         
     },
+    gameble_button_interface:function()
+    {
+        if(this.gameble_button.state == GamebleButtonState.OPEN){
+            this.gameble();
+            this.gameble_button.state = GamebleButtonState.WAIT;
+            this.gameble_button.normalColor = this.wait_color;
+            var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+            button_label.getComponent(cc.Label).string = "Wait";
+        }
+    },
+    gameble:function()
+    {
+        if(this.hero.getComponent("hero").gold >= 5){
+            this.hero.getComponent("hero").gold -= 5;
+            this.glod_label.string = String(this.hero.getComponent("hero").gold);
+            this.multiply = 2;
+        }
+    },
     start_spin:function()
     {
+        if(!this.multiply){
+            this.multiply = 1;
+        }
         for(var i = 0 ; i < this.spiners.length;i++){
             this.spiners[i].start_spin();   
         }
         this.spin_button.state = SpinerButtonState.STOP;
         this.spin_button.normalColor = this.stop_color;
         this.set_spin_button_label("Stop");
-        
+
+        this.gameble_button.state = GamebleButtonState.WAIT;
+        this.gameble_button.normalColor = this.wait_color;
+        var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+        button_label.getComponent(cc.Label).string = "Wait";
+
+        cc.audioEngine.playEffect(this.spin_sound,false);
     },
     respin:function()
     {
-        this.node.stopAction(this.current_action);
-        for(var i = 0 ; i < this.spiners.length;i++){
-            this.spiners[i].respin(); 
+        if(this.hero.getComponent("hero").gold >= 2){
+            this.hero.getComponent("hero").gold -= 2;
+            this.glod_label.string = String(this.hero.getComponent("hero").gold);
+            this.node.stopAction(this.current_action);
+            for (var i = 0; i < this.spiners.length; i++) {
+                this.spiners[i].respin();
+            }
+            this.spin_button.state = SpinerButtonState.STOP;
+            this.spin_button.normalColor = this.stop_color;
+            this.set_spin_button_label("Stop");
         }
-        this.spin_button.state = SpinerButtonState.STOP;
-        this.spin_button.normalColor = this.stop_color;
-        this.set_spin_button_label("Stop");
+        
     },
     stop:function()
     {
@@ -78,7 +117,7 @@ cc.Class({
         var open_respin = function(){
             this.spin_button.state = SpinerButtonState.RESPIN;
             this.spin_button.normalColor = this.respin_color;
-            this.set_spin_button_label("Respin");
+            this.set_spin_button_label("Respin\n$2");
         };
         var close_respin = function(){
             this.spin_button.state = SpinerButtonState.WAIT;
@@ -89,6 +128,21 @@ cc.Class({
             this.spin_button.state = SpinerButtonState.SPIN;
             this.spin_button.normalColor = this.spin_color;
             this.set_spin_button_label("Spin");
+
+            this.gameble_button.state = GamebleButtonState.OPEN;
+            this.gameble_button.normalColor = this.respin_color;
+            var button_label = this.gameble_button.node.getChildByName("Background").getChildByName("Label");
+            button_label.getComponent(cc.Label).string = "Gamble\n$5";
+        };
+        var do_spin_result = function(){
+            
+            this.results = [];
+            for(var i = 0 ; i < this.spiners.length;i++){
+                this.results.push(this.spiners[i].result);
+            }
+            this.node.parent.getComponent("fight_stage").do_spin_result(this.results);
+
+            this.close();
         }
         var seq = cc.sequence(
             cc.callFunc(call0,this),
@@ -98,8 +152,9 @@ cc.Class({
             cc.delayTime(time),
             cc.callFunc(close_respin,this),
             cc.callFunc(call2,this),
-            cc.delayTime(time),
-            cc.callFunc(open_spin,this)
+            cc.delayTime(time + 0.5),
+            cc.callFunc(open_spin,this),
+            cc.callFunc(do_spin_result,this)
         );
         this.spin_button.state = SpinerButtonState.WAIT;
         this.spin_button.normalColor = this.wait_color;
@@ -107,7 +162,20 @@ cc.Class({
         this.current_action = seq;
         this.node.runAction(seq);
     },
-    init:function()
+
+    open:function()
+    {
+        this.spin_button.state = SpinerButtonState.SPIN;
+        this.spin_button.normalColor = this.spin_color;
+        this.set_spin_button_label("Spin");
+    },
+    close:function()
+    {
+        this.spin_button.state = SpinerButtonState.WAIT;
+        this.spin_button.normalColor = this.wait_color;
+        this.set_spin_button_label("Wait");
+    },
+    init:function(hero,enemy)
     {
         var tool_comps = cc.find("Canvas/game_menu/tools_box").getComponent("tools_box").tools;
         var chance_set = {
@@ -116,15 +184,39 @@ cc.Class({
             arm_chance:this.arm_chance,
             asis_tool_chance:this.asis_tool_chance,
         };
+        this.hero = hero;
+        this.results = [];
         for(var i = 0 ; i < this.spiners.length;i++){
-            this.spiners[i].init(tool_comps,chance_set);
+            this.spiners[i].init(tool_comps,chance_set,hero,enemy);
+        }
+        this.glod_label.string =  String(hero.getComponent("hero").gold);
+    },
+    clear:function()
+    {
+        for(var i = 0 ; i < this.spiners.length;i++){
+            this.spiners[i].clear();
         }
     },
     start:function()
     {
         this.spin_button.state = SpinerButtonState.SPIN;
+        this.gameble_button.state = GamebleButtonState.OPEN;
         this.spin_button.normalColor = this.spin_color;
         
     },
+    update:function(dt)
+    {
+        // var has_stoped = true;
+        // for(var i = 0 ; i < this.spiners.length;i++){
+        //     has_stoped = (has_stoped && !this.spiners[i].is_spining);
+        // }
+        // this.results = [];
+        // if(has_stoped){
+        //     for(var i = 0 ; i < this.spiners.length;i++){
+        //         this.results.push(this.spiners[i].result);
+        //     }
+        // }
+    },
+    
     
 });

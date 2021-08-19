@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-22 16:49:55
- * @LastEditTime: 2020-08-25 20:22:26
+ * @LastEditTime: 2020-08-31 14:57:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Dungeon-Story\assets\Script\items\tool.js
@@ -24,6 +24,13 @@ cc.Class({
             default:ToolTypes.arm_main,
             type:ToolTypes
         },
+        description:"This is as tool",
+        HP:0,
+        AT:0,
+        DF:0,
+        SP:0,
+        LK:0,
+        MG:0,
         description:"This is as tool"
     },
 
@@ -92,5 +99,22 @@ cc.Class({
         hero.getComponent("hero").move(direction);
         cc.audioEngine.playEffect(window.Global.pick_up_sound,false);
     },
+
+    get_combat_values_contribution:function(listeners)
+    {
+        var tem_values = {
+            HP: this.HP,
+            AT: this.AT,
+            DF: this.DF,
+            SP: this.SP,
+            LK: this.LK,
+            MG: this.MG,
+        }; 
+        var fight_stage = cc.find("Canvas/fight_stage").getComponent("fight_stage");
+        fight_stage.broadcast("tool_values",tem_values,this.node);
+        
+        return tem_values; 
+    },
+    
     // update (dt) {},
 });

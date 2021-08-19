@@ -1,7 +1,7 @@
 {
   "title": "Dungeon-Story",
   "packageName": "org.cocos2d.demo",
-  "startScene": "813fe6da-7ea7-48af-9d7f-91cd54734a0a",
+  "startScene": "d9a97649-d194-4ee6-9c02-674c8a859dd9",
   "excludeScenes": [],
   "includeSDKBox": false,
   "orientation": {

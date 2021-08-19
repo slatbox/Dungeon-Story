@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "green_gobin_wizard",
+    "_name": "green_goblin_wizard",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -24,10 +24,16 @@
       },
       {
         "__id__": 3
+      },
+      {
+        "__id__": 4
+      },
+      {
+        "__id__": 5
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 6
     },
     "_opacity": 255,
     "_color": {
@@ -125,6 +131,42 @@
       }
     ],
     "playOnLoad": true,
+    "_id": ""
+  },
+  {
+    "__type__": "73fc2YIZN5Mhrl6cD6ctAO0",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "HP": 31,
+    "AT": 5,
+    "DF": 9,
+    "SP": 10,
+    "LK": 10,
+    "MG": 10,
+    "_id": ""
+  },
+  {
+    "__type__": "220dfTMSPxJTJ25gkKTF9aY",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "effect_color": {
+      "__type__": "cc.Color",
+      "r": 24,
+      "g": 81,
+      "b": 169,
+      "a": 255
+    },
+    "buff_sprite_frame": {
+      "__uuid__": "5e83d7a7-9144-4e96-85dd-c417d1485016"
+    },
     "_id": ""
   },
   {

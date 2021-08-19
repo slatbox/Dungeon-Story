@@ -1,7 +1,7 @@
 /*
  * @Author: Jeffrey.Swen
  * @Date: 2020-07-21 10:57:21
- * @LastEditTime: 2020-08-27 16:35:20
+ * @LastEditTime: 2020-09-06 10:34:56
  * @LastEditors: Please set LastEditors
  * 
  * @Description: specific class for hero
@@ -36,9 +36,9 @@ cc.Class({
         },
         current_hp:0,
         normal_keys:0,
-        gold:0
+        gold:10
     },
-
+    
     move:function(direction)
     {
         var call = function()
@@ -82,6 +82,7 @@ cc.Class({
     update_info_table:function()
     {
         var table = cc.find("BasicInfomation").getComponent("basic_info_table");
+
         var to_set = ["current_hp","gold","normal_keys"];
         for(var i = 0 ; i < to_set.length;i++){
             table.set_label(to_set[i],this[to_set[i]]);
@@ -99,12 +100,15 @@ cc.Class({
     start:function()
     {
         this.current_hp = this.node.getComponent("creature").HP;
-        this.update_info_table();
+        
         for(var i = 0 ; i < this.default_tools.length;i++){
             var new_tool = cc.instantiate(this.default_tools[i]).getComponent("tool");
             new_tool.is_default = 1;
             new_tool.collect_into_bag();
         }
-    }
+        this.update_info_table();
+    },
+
+    
     // update (dt) {},
 });

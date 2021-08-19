@@ -47,7 +47,8 @@ const HeroStage = cc.Class({
         this.node.addChild(this.middle);
         this.node.addChild(this.right);
         this.name_label.string = this.middle.name;
-        this.description.set_description(this.middle);
+        var data = this.middle.getComponent("creature").get_raw_values();
+        this.description.set_description(data);
 
         // cc.director.preloadScene("main_game", function () {
         //     cc.log("preload main_game");
@@ -89,7 +90,8 @@ const HeroStage = cc.Class({
 
         this.current_occupation_index = (this.current_occupation_index+1)%len;
         this.name_label.string = this.middle.name;
-        this.description.set_description(this.middle);
+        var data = this.middle.getComponent("creature").get_raw_values();
+        this.description.set_description(data);
 
     },
     back_to_main_menu:function()
@@ -139,7 +141,8 @@ const HeroStage = cc.Class({
     {
         var occupation = {"occupation":this.name_label.string};
         DataManager.save_obj(occupation,"occupation");
-        cc.director.loadScene("main_game");
+        DataManager.save_obj({"scene":"main_game"},"to_load");
+        cc.director.loadScene("loading");
     }
 
 

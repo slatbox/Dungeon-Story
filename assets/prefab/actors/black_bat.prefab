@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "black_bat1",
+    "_name": "black_bat",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -27,10 +27,13 @@
       },
       {
         "__id__": 4
+      },
+      {
+        "__id__": 5
       }
     ],
     "_prefab": {
-      "__id__": 5
+      "__id__": 6
     },
     "_opacity": 255,
     "_color": {
@@ -138,6 +141,22 @@
       "__id__": 1
     },
     "_enabled": true,
+    "HP": 27,
+    "AT": 3,
+    "DF": 7,
+    "SP": 6,
+    "LK": 10,
+    "MG": 5,
+    "_id": ""
+  },
+  {
+    "__type__": "d884ccYtdVNrZFzi4HPailk",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
     "_id": ""
   },
   {
@@ -146,7 +165,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4c67a5a8-d0f2-430f-b870-ce2f4c91f7b5"
     },
     "fileId": "ecKwPhDKBIU4yRBuVtkiCr",
     "sync": false
